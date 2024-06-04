@@ -1,0 +1,16 @@
+---
+title: Canadians.Love
+---
+<!DOCTYPE html>
+<html lang="en">
+  {% include "component/head.njk" %}
+    <body style="--size:1.2rem">
+      {% include "component/header.njk" %}
+
+      {{ content | safe }}
+
+      {% include "component/footer.njk" %}
+      {% include "component/scripts.njk" %}
+    </body>
+  </html>
+</html>

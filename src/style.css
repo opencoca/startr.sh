@@ -1,0 +1,16 @@
+body{
+  max-width:50rem;
+  padding: 2rem;
+  margin: auto;
+}
+
+img{
+  display:block;
+}
+
+h1
+{
+  display:block;
+  margin: auto;
+  text-align: center 
+}
