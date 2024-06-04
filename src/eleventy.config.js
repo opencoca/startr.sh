@@ -12,7 +12,7 @@ module.exports = function(eleventyConfig) {
   });
   // Copy any image file to `_site`, via Glob pattern
 	// Keeps the same directory structure.
-	eleventyConfig.addPassthroughCopy("**/*.{png,jpg,jpeg,gif,svg}");
+	eleventyConfig.addPassthroughCopy("**/*.{png,jpg,jpeg,gif,svg,webp}");
 
   // passthrough any sh files
   eleventyConfig.addPassthroughCopy("**/*.sh");
