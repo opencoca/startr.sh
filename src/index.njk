@@ -3,7 +3,8 @@
 {% include "home_page.njk" %}
 
 html_content
-# 
+#--><pre>
+#
 # Version 1.6.0
 #
 # Copyright (c) Startr LLC. All rights reserved.
@@ -35,17 +36,17 @@ ERROR_EMOJI='❌'
 
 # Validate script arguments
 if [ "$#" -lt 1 ]; then
-    echo -e "${RED}Usage: $0 <build|run> [platform]${NC}"
+    echo -e "${RED}Usage: startr.sh <build|run> [platform]${NC}"
     exit 1
 fi
 
-# RUN variable to decide whether to run the Docker container after building. 
+# JOB variable to decide whether to run the Docker container after building. 
 # Set to 'run' if you want to run after building.
-RUN=$1
+JOB=$1
 
-# Validate RUN variable
-if [ "$RUN" != "build" ] && [ "$RUN" != "run" ]; then
-    echo -e "${RED}Invalid argument for RUN: $RUN. Use 'build' or 'run'.${NC}"
+# Validate JOB variable
+if [ "$JOB" != "build" ] && [ "$JOB" != "run" ]; then
+    echo -e "${RED}Invalid argument for JOB: $JOB. Use 'build' or 'run'.${NC}"
     exit 1
 fi
 
@@ -70,7 +71,7 @@ echo -e "${BLUE}FULL_BRANCH=${NC}$FULL_BRANCH"
 echo -e "${BLUE}BRANCH=${NC}$BRANCH"
 
 # Check if the RUN variable is set to 'run'
-if [ "$RUN" == "run" ]; then
+if [ "$JOB" == "run" ]; then
     echo -e "${YELLOW}${BUILD_EMOJI} Building Docker image...${NC}"
 else
     echo -e "${YELLOW}${BUILD_EMOJI} Building Docker image without running...${NC}"
@@ -122,7 +123,7 @@ else
 fi
 
 # If the RUN variable is set to 'run', execute the docker run command
-if [ "$RUN" == "run" ]; then
+if [ "$JOB" == "run" ]; then
     echo -e "${YELLOW}${RUN_EMOJI} Running the Docker container...${NC}"
     if docker run $DOCKER_RUN_FLAGS \
       -p 9999:8888 \
@@ -138,5 +139,6 @@ else
     echo -e "${GREEN}${SUCCESS_EMOJI} Build completed. Not running the Docker container.${NC}"
 fi
 
-#</pre></body></html>
 #
+# That's all folks
+#</pre></body></html>
