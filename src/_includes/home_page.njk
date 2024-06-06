@@ -5,10 +5,16 @@ title: startr.sh
 <html lang="en">
   {% include "component/head.njk" %}
 
-
-
-  <body
-    style="--size:1.2rem; --bg:oklch(0 0 0); --c:oklch(95% 0 200); --ff:sans-serif; --p:20px; --d:flex; --fd:column; --ai:center; --jc:center; --size:16px; --c-lg:oklch(95% 0 150);">
+  <body style="
+    --size:0;
+      --bg:oklch(0 0 0); 
+      --c:oklch(95% 0 200);
+      --ff:sans-serif; 
+      --p:20px; 
+      --d:flex; 
+      --fd:column; 
+      --ai:center; 
+      --jc:center;">
     <header
       style="--d:flex; --jc:space-between; --ai:center; --w:100%; --p:20px; --bg:oklch(0.15 0.08 220); --br:0.6rem">
       <div style="--d:flex; --ai:center;">
@@ -31,13 +37,12 @@ title: startr.sh
     <main style="--d:flex; --fd:column; --ai:center; --jc:center; --p:20px; --mt:20px; --w:100%;">
       <h1 style="--ta:center;"><span>Startr.sh</span></h1>
 
-      <h2>The <span>Best</span> way to <span>Build</span> and <b>Launch</b></h2>
-      <p>Just run the following line in your terminal to get startred ;)</p>
+      <h2 style="--ta:center;">The <span>Best</span> way to <span>Build</span> and <b>Launch</b></h2>
+      <p style="--ta:center;">Just run the following line in your terminal to get startred ;)</p>
       <code style="
         --bg:oklch(30% 0.05 250); 
         --c:oklch(85% 0 320); 
-        --p:10px 20px; 
-        --mt:20px; 
+        --p:10px 20px;  
         --br:5px;">bash <(curl -sL startr.sh)</code>
 
       <h2 style="--ta:center;"><span style="--c:oklch(85% 0 330);">Follow industry best practices.</span>
@@ -46,16 +51,16 @@ title: startr.sh
 
 
     <section style="--d:flex; --fd:column; --ai:center; --jc:center;--w:100%;">
-      <p style="--ta:center; --mt:10px; --mb:20px;">With Startr.sh, creating Docker images for your projects is
+      <p style="--ta:center; --mt:10px; --mb:20px; --maxw:50ch">With Startr.sh, creating Docker images for your projects is
         streamlined and efficient.</p>
 
 
-      <p style="--ta:center; --mt:10px;">Follow best practices and use popular frameworks like<br>
+      <p style="--ta:center; --mt:10px; --maxw:50ch">Follow best practices and use popular frameworks like
         Python, Django, Flask,
         Node, and Startr.Style CSS.</p>
 
 
-      <p style="--ta:center; --mt:10px;">After countless projects and years of experience, we provide you<br>
+      <p style="--ta:center; --mt:10px; --maxw:40ch">After countless projects and years of experience, we provide you
         the tools and insights to launch your projects quickly and reliably.</p>
 
 
