@@ -349,7 +349,7 @@ if [ "$JOB" == "run" ]; then
     echo -e "${YELLOW}${RUN_EMOJI} Running the Docker container...${NC}"
     if docker run $DOCKER_RUN_FLAGS \
       -p 8888:8888 \
-      -p 8000:8000
+      -p 8000:8000 \
       -p 8080:8080 \
       -p 6000:5000 \
       startr/$PROJECT-$BRANCH:latest; then
