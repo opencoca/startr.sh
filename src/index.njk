@@ -276,7 +276,7 @@ fi
 
 
 # Set PROJECTPATH to the path of the current directory
-PROJECTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECTPATH="$(git rev-parse --show-toplevel)"
 # Set PROJECT to the lowercase version of the name of this directory
 PROJECT=$(echo ${PROJECTPATH##*/} | awk '{print tolower($0)}')
 # Set FULL_BRANCH to the name of the current Git branch
@@ -287,6 +287,7 @@ BRANCH=${FULL_BRANCH##*/}
 TAG=$(git describe --always --tag)
 
 # Print the values of the variables
+echo -e "${BLUE}### Variables ###${NC}"
 echo -e "${BLUE}PROJECTPATH=${NC}$PROJECTPATH"
 echo -e "${BLUE}PROJECT=${NC}$PROJECT"
 echo -e "${BLUE}FULL_BRANCH=${NC}$FULL_BRANCH"
