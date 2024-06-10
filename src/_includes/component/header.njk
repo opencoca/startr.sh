@@ -1,30 +1,23 @@
-<header style="--d: flex; --jc: space-between; --ai: center">
-  <nav id="edit_bar" style="--d: none">
-    <a id="save" href="data:text, To save enable javascript." onclick="saveDOMAsHTML();return false;">Save</a>
-    <a id="edit" href="data:text, To edit enable javascript." onclick="toggleAllTextEditable();return false;">Edit</a>
-    <a id="toggleDrag" href="data:text, To drag enable javascript." onclick="return false"
-      style="--d: none; --d-sm: inline">Drag</a>
-  </nav>
-  <h1><a href="/">{{ title }}</a></h1>
+<header style="
+  --d:none;
+  --d-sm:flex;
+  --jc:space-between; 
+  --ai:center; 
+  --w:100%; 
+  --p:20px; 
+  --bg:oklch(0.15 0.08 220); 
+  --br:0.6rem">
+  <div style="--d:flex; --ai:center;">
+    <img alt="Logo" src="https://source.unsplash.com/random/50x50?tech" 
+      style="--radius:50%; --mr:10px;">
+    <h1 style="--m:0; --size:24px;">
+      <span>Startr.sh</span>
+    </h1>
+  </div>
+
   <nav>
-    <menu style="--d:none; --d-sm: flex; --cg: 0.2ch; --lis: none">
-      <li>
-        <a href="/AI" style="--c: var(--oklch-dark-gray)">AI Innovations</a>
-      </li>
-      -
-      <li>
-        <a href="/#learning" style="--c: var(--oklch-dark-gray)">Learning</a>
-      </li>
-      -
-      <li>
-        <a href="/#arts" style="--c: var(--oklch-dark-gray)">The Arts</a>
-      </li>
-      -
-      <li>
-        <a href="/#nature" style="--c: var(--oklch-dark-gray)">Nature</a>
-      </li>
-      -
-      <li><a href="#fun" style="--c: var(--oklch-dark-gray)">Fun</a></li>
-    </menu>
+    <a href="#" style="--d:none;--c:oklch(85% 0 50); --m:0 15px; --td:none;">Docs</a> <a href="#"
+      style="--d:none;--c:oklch(85% 0 50); --m:0 15px; --td:none;">FAQ</a> <a
+      href="https://github.com/Startr/WEB-DEV-startr.sh" style="--c:oklch(85% 0 50); --m:0 15px; --td:none;">GitHub</a>
   </nav>
 </header>

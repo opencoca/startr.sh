@@ -10,31 +10,20 @@ title: startr.sh
       --bg:oklch(0 0 0); 
       --c:oklch(95% 0 200);
       --ff:sans-serif; 
-      --p:20px; 
+      --p-sm:20px;
       --d:flex; 
       --fd:column; 
       --ai:center; 
       --jc:center;">
-    <header
-      style="--d:flex; --jc:space-between; --ai:center; --w:100%; --p:20px; --bg:oklch(0.15 0.08 220); --br:0.6rem">
-      <div style="--d:flex; --ai:center;">
-        <img alt="Logo" src="https://source.unsplash.com/random/50x50?tech" style="--radius:50%; --mr:10px;">
-
-        <h1 style="--m:0; --size:24px;"><span>Startr.sh</span>
-        </h1>
-      </div>
-
-
-      <nav>
-        <a href="#" style="--d:none;--c:oklch(85% 0 50); --m:0 15px; --td:none;">Docs</a> <a href="#"
-          style="--d:none;--c:oklch(85% 0 50); --m:0 15px; --td:none;">FAQ</a> <a
-          href="https://github.com/Startr/WEB-DEV-startr.sh"
-          style="--c:oklch(85% 0 50); --m:0 15px; --td:none;">GitHub</a>
-      </nav>
-    </header>
-
-
-    <main style="--d:flex; --fd:column; --ai:center; --jc:center; --p:20px; --mt:20px; --w:100%;">
+      {% include "component/header.njk" %}
+    
+    <main style="
+      --d:flex; 
+      --fd:column; 
+      --ai:center; 
+      --jc:center;
+      --mt-sm:20px;
+      --w:100%;">
       <h1 style="--ta:center;"><span>Startr.sh</span></h1>
 
       <h2 style="--ta:center;">The <span>Best</span> way to <span>Build</span> and <b>Launch</b></h2>
