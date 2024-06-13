@@ -1,4 +1,4 @@
-# startr.sh
+# startr.sh v0.1.0
 Startr.sh: The best way to Build and Launch Projects following industry and coding best practices. 
 
 Startr.sh - the ultimate launchpad for your development projects! With a simple terminal command, `bash <(curl -sL startr.sh)`, you can set up your project environment in no time. Streamline your Docker image creation process and say goodbye to tedious setup and configuration.
