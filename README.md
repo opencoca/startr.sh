@@ -69,3 +69,19 @@ Extrapolating on its potential uses, the versatility of this command becomes app
 6. **Update Management**: The command could potentially fetch and apply updates for existing projects, ensuring that developers always work with the latest tools and libraries.
 
 However, it's essential to exercise caution when running commands fetched from the internet. Trusting the source is crucial, as executing arbitrary code can potentially expose your system to security risks. Startr.sh seems to be a service that aims to simplify development setup, but one should always verify the integrity and safety of the script before execution.
+
+
+# Get involved with the development
+
+You can work on the development of Startr.sh by following these steps:
+
+1. **Fork the Repository**: Start by forking the main Startr.sh repository to your GitHub account. This will create a copy of the project under your account, allowing you to make changes without affecting the original repository.
+
+2. **Clone the Repository**: Clone the forked repository to your local machine using the `git clone` command. This will download the project files to your computer, enabling you to work on them locally.
+
+3. **Launch the Project**: Navigate to the project directory and run the necessary commands to launch the project. This may involve setting up a development environment, installing dependencies, and configuring the project settings.
+
+   ```
+   cd startr.sh
+   bash <(curl -sL startr.sh)
+   ```
