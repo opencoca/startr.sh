@@ -352,10 +352,10 @@ if [ "$JOB" == "run" ]; then
       -p 8888:8888 \
       -p 8000:8000 \
       -p 8080:8080 \
-      -p 5000:5000 \
+      -p 9000:5000 \
       startr/$PROJECT-$BRANCH:latest; then
         echo -e "${GREEN}${SUCCESS_EMOJI} Docker container is running!${NC}"
-        echo -e "${YELLOW}Note: Port 5000 is mapped to 5000, 8080 is mapped to 8080, and 8888 is mapped to 8888.${NC}"
+        echo -e "${YELLOW}Note: Port 9000 is mapped to 5000, 8080 is mapped to 8080, and 8888 is mapped to 8888.${NC}"
     else
         echo -e "${RED}${ERROR_EMOJI} Failed to run Docker container!${NC}"
         exit 1
