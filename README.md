@@ -1,7 +1,8 @@
 # startr.sh v0.1.0
+
 Startr.sh: The best way to Build and Launch Projects following industry and coding best practices. 
 
-Startr.sh - the ultimate launchpad for your development projects! With a simple terminal command, `bash <(curl -sL startr.sh)`, you can set up your project environment in no time. Streamline your Docker image creation process and say goodbye to tedious setup and configuration.
+Startr.sh - is the ultimate launchpad for your development projects! With a simple terminal command, `bash <(curl -sL startr.sh)`, you can set up your project environment in no time. Streamline your Docker image creation process and say goodbye to tedious setup and configuration.
 
 Startr.sh is designed to enhance your development workflow, regardless of the framework you use. It supports popular languages and frameworks such as Python, Django, Flask, Node, and Startr.Style CSS, ensuring a seamless and efficient experience.
 
@@ -85,3 +86,5 @@ You can work on the development of Startr.sh by following these steps:
    cd startr.sh
    bash <(curl -sL startr.sh)
    ```
+
+**Note:** Automatic dev env setup is comming soon!
