@@ -1,6 +1,6 @@
 ---
 
-title: Canadians.Love/Privacy
+title: Startr.sh Privacy Policy  
 
 ---
 1. A comprehensive document detailing how we collect, use, and protect personal information in compliance with applicable laws. This page is crucial for transparency and trust-building, ensuring that your data is handled with the utmost care and respect for privacy.
@@ -10,9 +10,9 @@ title: Canadians.Love/Privacy
 
 **Last updated May 15, 2024**
 
-This privacy notice for Startr LLC (doing business as Canadians.Love) ('**we**', '**us**', or '**our**'), describes how and why we might collect, store, use, and/or share ('**process**') your information when you use our services ('**Services**'), such as when you:
+This privacy notice for Startr LLC (doing business as Startr.cloud) ('**we**', '**us**', or '**our**'), describes how and why we might collect, store, use, and/or share ('**process**') your information when you use our services ('**Services**'), such as when you:
 
-- Visit our website at [Canadians.Love/AI](https://Canadians.Love/AI), or any website of ours that links to this privacy notice
+- Visit our website at [Startr.Cloud](https://startr.cloud), or any website of ours that links to this privacy notice
 - Engage with us in other related ways, including any sales, marketing, or events
 
 **Questions or concerns?** Reading this privacy notice will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at [ai.privacy@candians.love](mailto:ai.privacy@candians.love).

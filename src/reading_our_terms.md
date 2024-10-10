@@ -1,5 +1,5 @@
 ---
-title: Canadians.Love/reading_our_terms
+title: Startr.sh/reading_our_terms
 
 ---
 
@@ -9,7 +9,7 @@ Last updated June 2024
 
 AGREEMENT TO OUR LEGAL TERMS
 
-We are Canadians.Love an association of Startr LLC, AI Researchers, and Educators.
+We are Startr.sh an association of Startr LLC, AI Researchers, and Educators.
 
 ("Company," "we," "us," "our").
 
