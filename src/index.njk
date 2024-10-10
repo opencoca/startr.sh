@@ -31,7 +31,7 @@ ascii_art="
                        \____/  \__| \__,_||_|    \__||_|   (_)|___/|_| |_|
 
    _____ _             _   _                               _           _              _       _     _   
-  / ____| |           | | (_)                             (_)         | |            (_)     | |   | |  
+  / ____| |           | | (_)                             (*)         | |            (H)     | |   | |  
  | (___ | |_ __ _ _ __| |_ _ _ __   __ _   _ __  _ __ ___  _  ___  ___| |_ ___   _ __ _  __ _| |__ | |_ 
   \___ \| __/ _\` | '__| __| | '_ \ / _\` | | '_ \| '__/ _ \| |/ _ \/ __| __/ __| | '__| |/ _\` | '_ \| __|
   ____) | || (_| | |  | |_| | | | | (_| | | |_) | | | (_) | |  __/ (__| |_\__ \ | |  | | (_| | | | | |_ 
@@ -184,7 +184,7 @@ create_dockerfile() {
 # Python Dockerfile
 FROM python:3.8-slim
 
-WORKDIR /app
+WORKDIR /project
 COPY Pipfile Pipfile.lock ./
 RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
 
@@ -199,7 +199,7 @@ EOF
 # Node.js (Bun) Dockerfile
 FROM oven/bun:latest
 
-WORKDIR /app
+WORKDIR /project
 COPY . .
 RUN bun install
 
@@ -212,7 +212,7 @@ EOF
 # Node.js Dockerfile
 FROM node:14
 
-WORKDIR /app
+WORKDIR /project
 COPY package*.json ./
 RUN npm install
 
@@ -334,7 +334,7 @@ fi
 
 # Check if running in an interactive shell
 if [ -t 1 ]; then
-    DOCKER_RUN_FLAGS="-it"
+    DOCKER_RUN_FLAGS="-it --rm"
 else
     DOCKER_RUN_FLAGS=""
 fi
@@ -347,6 +347,8 @@ if [ "$JOB" == "run" ]; then
       -p 8000:8000 \
       -p 8080:8080 \
       -p 9000:5000 \
+      -v $PROJECTPATH:/project \
+      --name $PROJECT-$BRANCH \
       startr/$PROJECT-$BRANCH:latest; then
         echo -e "${GREEN}${SUCCESS_EMOJI} Docker container is running!${NC}"
         echo -e "${YELLOW}Note: Port 9000 is mapped to 5000, 8080 is mapped to 8080, and 8888 is mapped to 8888.${NC}"
