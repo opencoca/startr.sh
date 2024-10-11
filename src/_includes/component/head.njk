@@ -49,6 +49,7 @@
   </style>
 
   <title>
-    {{ title }}
+    {{ title | default: 'Startr.sh'}}
   </title>
+  <meta name="description" content="{{ description | default: 'Startr.sh is simplifying the way you start your next project. We provide you with a simple and easy to use boilerplate to get your project up and running quickly.' }}">
 </head>
