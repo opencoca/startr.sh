@@ -146,6 +146,7 @@ explain_repo() {
     read -r CLONE_REPO
     if [ "$CLONE_REPO" == "y" ]; then
         git clone https://github.com/Startr/WEB-flask
+        cd WEB-flask
         if [ $? -ne 0 ]; then
             echo -e "${RED}Failed to clone the repository. Please check your internet connection and try again.${NC}"
             exit 1
@@ -153,8 +154,22 @@ explain_repo() {
         cd WEB-flask || exit
         echo -e "${GREEN}Repository cloned and switched to WEB-flask directory.${NC}"
     else
-        echo -e "${RED}Please set up a git repository and try again.${NC}"
-        exit 1
+        echo -e ""
+        echo -e "${BLUE}Would you like to set up a git flow repository in this directory? (y/n):${NC}"
+        echo -e ""
+        echo -e "${YELLOW}Note: Git flow is a branching model for Git, which helps with managing your repository.${NC}"
+        echo -e "${YELLOW}      You will need to have git flow installed on your system.${NC}" 
+        read -r SETUP_REPO
+        echo -e ""
+        if [ "$SETUP_REPO" == "y" ]; then
+            git flow init
+        else
+            echo -e "OK... You'll need to set up a git repository before running this script."
+            echo -e "${RED}Please set up a git repository before running this script.${NC}"
+
+            exit 1
+        fi
+
     fi
 }
 
@@ -350,8 +365,9 @@ if [ "$JOB" == "run" ]; then
       -v $PROJECTPATH:/project \
       --name $PROJECT-$BRANCH \
       startr/$PROJECT-$BRANCH:latest; then
-        echo -e "${GREEN}${SUCCESS_EMOJI} Docker container is running!${NC}"
+        echo -e "${GREEN}${SUCCESS_EMOJI} Docker container launched!${NC}"
         echo -e "${YELLOW}Note: Port 9000 is mapped to 5000, 8080 is mapped to 8080, and 8888 is mapped to 8888.${NC}"
+        echo -e "${YELLOW}Note: If you've exited the container it is no longer running.${NC}"
     else
         echo -e "${RED}${ERROR_EMOJI} Failed to run Docker container!${NC}"
         exit 1
