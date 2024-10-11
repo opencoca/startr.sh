@@ -22,3 +22,6 @@
 
 	[plugins.inputs]
 		output_path = "reports/lighthouse/index.html"
+		
+		[plugins.inputs.settings]
+    		preset = "desktop"
