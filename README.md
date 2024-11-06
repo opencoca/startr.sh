@@ -1,4 +1,6 @@
-# startr.sh v0.2.2
+# startr.sh v0.2.3
+
+# Now works with Python, Django, Flask, Node, and Startr.Style CSS and more spaces!!!
 
 Startr.sh: The best way to Build and Launch Projects following industry and coding best practices. 
 
