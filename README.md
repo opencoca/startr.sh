@@ -1,4 +1,4 @@
-# startr.sh v0.1.0
+# startr.sh v0.2.2
 
 Startr.sh: The best way to Build and Launch Projects following industry and coding best practices. 
 
