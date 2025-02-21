@@ -53,4 +53,17 @@
     {{ title or 'Startr.sh'}}
   </title>
   <meta name="description" content="{{ description or 'Startr.sh is simplifying the way you start your next project. We provide you with a simple and easy to use boilerplate to get your project up and running quickly.' }}">
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//visitas.startr.cloud/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '5']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
 </head>
