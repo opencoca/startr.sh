@@ -8,7 +8,8 @@ style="background: rgb(2, 0, 36);
   {% include "component/head.njk" %}
 
   <body style="
-    --size:1em;
+      --links:rgba(0, 213, 184, 1);
+      --size:1em;
       --bg:transparent; 
       --c:oklch(95% 0 200);
       --ff:sans-serif; 
@@ -74,7 +75,18 @@ style="background: rgb(2, 0, 36);
     </section>
 
 
+  
+    <details>
+      <summary>What is Startr.sh?</summary>
+    <fun-quote style="--d:flex; --ai:center; --jc:center; --w:80%;--m:auto; --p:20px; --bg:oklch(0.15 0.08 220); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
+      <span>Startr.sh is both a script and a page that tells you about the script. <a href="https://github.com/Startr/WEB-DEV-startr.sh?tab=readme-ov-file#how-it-works">- Learn more here.</a></span>
+    </fun-quote>
+    </details>
+    <details>
+      <summary>How can I modify the script?</summary>
+    <fun-quote style="--d:flex; --ai:center; --jc:center; --w:90%; --m:auto; --p:20px; --bg:oklch(0.15 0.08 220); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;"><span>At the bottom of this page is startr.sh. It's easier to understand and modify<a href="https://github.com/Startr/WEB-DEV-startr.sh/blob/develop/src/index.njk"> the code here.</a></span></fun-quote>
+    </details>
     <footer style="--d:flex; --ai:center; --jc:center; --w:100%; --p:20px; --bg:oklch(0.15 0.08 220); --mt:20px;     --br: 0.6em;">
-      <p style="--c:oklch(85% 0 50); --m:0;">© 2024 <a href="https://startr.cloud">Startr LLC</a> All rights reserved.</p>
+      <p style="--c:oklch(85% 0 50); --m:0;">© 2024 <a style="--c:var(--primary);" href="https://startr.cloud">Startr LLC</a> All rights reserved.</p>
     </footer>
     <!--
