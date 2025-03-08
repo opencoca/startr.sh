@@ -2,7 +2,7 @@
 <html lang="en"
 style="background: rgb(2, 0, 36);
     background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 66%, rgba(0, 213, 184, 1) 100%);
-    margin: -2em 1em;
+    margin: -2.8em 1em;
     --maxw: 100vw;"
 >
   {% include "component/head.njk" %}
@@ -35,8 +35,9 @@ style="background: rgb(2, 0, 36);
       <p style="--ta:center;">Just run the following line in your terminal to get startred ;)</p>
       <code style="
         --bg:oklch(30% 0.05 250); 
-        --c:oklch(85% 0 320); 
-        --p:10px 20px;  
+        --c:oklch(85% 0 320);
+        --p:0.6em 0.6em;  
+        --p-sm:10px 20px;  
         --br:5px;
         --m: 1rem 2rem;
         --m-sm: 0;">
@@ -76,7 +77,7 @@ style="background: rgb(2, 0, 36);
 
 
   
-    <details>
+    <details style="--mt:1.6em">
       <summary>What is Startr.sh?</summary>
     <fun-quote style="--d:flex; --ai:center; --jc:center; --w:80%;--m:auto; --p:20px; --bg:oklch(0.15 0.08 220); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
       <span>Startr.sh is both a script and a page that tells you about the script. <a href="https://github.com/Startr/WEB-DEV-startr.sh?tab=readme-ov-file#how-it-works">- Learn more here.</a></span>
