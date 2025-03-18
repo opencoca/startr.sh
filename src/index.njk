@@ -127,10 +127,20 @@ ERROR_EMOJI='❌'
 # Function to ask the user for input
 ask_for_input() {
     echo -e "${YELLOW}You haven't specified runtime arguments. Let's set them up interactively.${NC}"
-    echo -e "${BLUE}Do you want to build or build and run? (Enter 'build' or 'run'):${NC}"
-    read -r JOB
-    while [[ "$JOB" != "build" && "$JOB" != "run" ]]; do
-        echo -e "${RED}Invalid input. Please enter 'build' or 'run':${NC}"
+    echo -e "${BLUE}Choose one of the following options:${NC}"
+    echo -e "${BLUE}1. build               - Build the Docker image only.${NC}"
+    echo -e "${BLUE}2. build_and_run       - (Default) Build the Docker image and run the container.${NC}"
+    echo -e "${BLUE}3. run                 - Run the container using the existing image.${NC}"
+    echo -e "${BLUE}Enter your choice (build/build_and_run/run) [default: build_and_run]:${NC}"
+    read -r JOB_INPUT
+    # Default to "build_and_run" if nothing is entered
+    if [ -z "$JOB_INPUT" ]; then
+        JOB="build_and_run"
+    else
+        JOB=$JOB_INPUT
+    fi
+    while [[ "$JOB" != "build" && "$JOB" != "build_and_run" && "$JOB" != "run" ]]; do
+        echo -e "${RED}Invalid input. Please enter 'build', 'build_and_run', or 'run':${NC}"
         read -r JOB
     done
 
@@ -184,12 +194,13 @@ if [ "$#" -lt 1 ]; then
     ask_for_input
 else
     JOB=$1
-    if [ "$JOB" != "build" ] && [ "$JOB" != "run" ]; then
-        echo -e "${RED}Invalid argument for JOB: $JOB. Use 'build' or 'run'.${NC}"
+    if [ "$JOB" != "build" ] && [ "$JOB" != "build_and_run" ] && [ "$JOB" != "run" ]; then
+        echo -e "${RED}Invalid argument for JOB: $JOB. Use 'build', 'build_and_run', or 'run'.${NC}"
         exit 1
     fi
     PLATFORM=$2
 fi
+
 
 # Function to create a default Dockerfile based on project type
 create_dockerfile() {
@@ -334,17 +345,21 @@ fi
 echo -e "${BLUE}docker build -t startr/$PROJECT-$BRANCH:$TAG .${NC}"
 echo -e "${BLUE}docker tag startr/$PROJECT-$BRANCH:$TAG startr/$PROJECT-$BRANCH:latest${NC}"
 
-# Build the Docker image
-if docker build $PLATFORM_ARG $BUILD_ARG \
-  -f $DOCKERFILE \
-  -t startr/$PROJECT-$BRANCH:$TAG \
-  -t startr/$PROJECT-$BRANCH:$FLATPLATFORM \
-  -t startr/$PROJECT-$BRANCH:latest \
-  .; then
-    echo -e "${GREEN}${SUCCESS_EMOJI} Build successful!${NC}"
-else
-    echo -e "${RED}${ERROR_EMOJI} Build failed!${NC}"
-    exit 1
+# Build step: run only if job is "build" or "build_and_run"
+if [ "$JOB" == "build" ] || [ "$JOB" == "build_and_run" ]; then
+    echo -e "${YELLOW}${BUILD_EMOJI} Building Docker image...${NC}"
+    # ... (the docker build command remains unchanged) ...
+    if docker build $PLATFORM_ARG $BUILD_ARG \
+      -f $DOCKERFILE \
+      -t startr/$PROJECT-$BRANCH:$TAG \
+      -t startr/$PROJECT-$BRANCH:$FLATPLATFORM \
+      -t startr/$PROJECT-$BRANCH:latest \
+      .; then
+        echo -e "${GREEN}${SUCCESS_EMOJI} Build successful!${NC}"
+    else
+        echo -e "${RED}${ERROR_EMOJI} Build failed!${NC}"
+        exit 1
+    fi
 fi
 
 # Check if running in an interactive shell
@@ -354,14 +369,14 @@ else
     DOCKER_RUN_FLAGS=""
 fi
 
-# If the RUN variable is set to 'run', execute the docker run command
-if [ "$JOB" == "run" ]; then
+# Run step: run if job is "build_and_run" or "run"
+if [ "$JOB" == "build_and_run" ] || [ "$JOB" == "run" ]; then
     echo -e "${YELLOW}${RUN_EMOJI} Running the Docker container:${NC}"
     echo -e "${BLUE}docker run $DOCKER_RUN_FLAGS -p 8888:8888 \
         -p 8000:8000 \
         -p 8080:8080 \
         -p 9000:5000 \
-        -v "$PROJECTPATH:/project" \
+        -v \"$PROJECTPATH:/project\" \
         --name $PROJECT-$BRANCH \
         startr/$PROJECT-$BRANCH:latest${NC}"
     if docker run $DOCKER_RUN_FLAGS \
