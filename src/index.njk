@@ -349,7 +349,7 @@ echo -e "${BLUE}docker tag startr/$PROJECT-$BRANCH:$TAG startr/$PROJECT-$BRANCH:
 if [ "$JOB" == "build" ] || [ "$JOB" == "build_and_run" ]; then
     echo -e "${YELLOW}${BUILD_EMOJI} Building Docker image...${NC}"
     # ... (the docker build command remains unchanged) ...
-    if docker build $PLATFORM_ARG $BUILD_ARG \
+    if docker build --load $PLATFORM_ARG $BUILD_ARG \
       -f $DOCKERFILE \
       -t startr/$PROJECT-$BRANCH:$TAG \
       -t startr/$PROJECT-$BRANCH:$FLATPLATFORM \
