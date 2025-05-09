@@ -1,0 +1,50 @@
+# Seatbelts Configuration File
+# This file controls how Seatbelts evaluates your system's security
+
+# GitHub configuration
+github_username: "your-github-username"
+repository_name: "seatbelts-results"
+
+# Features or services that are required for your workflow
+# Uncomment and edit as needed
+required_features:
+  # - "SSH"                # Remote Login (SSH)
+  # - "Bluetooth"          # Bluetooth connectivity
+  # - "AirDrop"            # AirDrop file sharing
+  # - "Java Runtime"       # Java runtime environment
+  # - "Flash Player"       # Adobe Flash Player
+  # - "Safari JavaScript"  # JavaScript in Safari
+  # - "Personal Hotspot"   # Internet sharing from device
+  # - "VPN"                # Virtual Private Network
+
+# Custom test settings
+# Adjust thresholds as needed
+test_settings:
+  screensaver_timeout_seconds: 300  # 5 minutes
+  max_browser_extensions: 3         # Maximum allowed browser extensions
+  allowed_ports:                    # Allowed listening ports
+    - 22   # SSH
+    - 80   # HTTP
+    - 443  # HTTPS
+  
+  # List of authorized wireless networks
+  authorized_networks:
+    - "CompanyWiFi"
+    - "CompanyGuest"
+  
+  # Authorized DNS servers
+  authorized_dns:
+    - "8.8.8.8"  # Google DNS
+    - "1.1.1.1"  # Cloudflare DNS
+
+# Schedule settings (in cron format)
+schedule:
+  run: "0 9 * * *"      # Daily at 9:00 AM
+  push: "0 10 * * 1"    # Weekly on Monday at 10:00 AM
+
+# Notification settings
+notifications:
+  email: true                      # Send email notifications
+  email_address: "you@example.com" # Email address for notifications
+  slack: false                     # Send Slack notifications
+  slack_webhook: ""                # Slack webhook URL
