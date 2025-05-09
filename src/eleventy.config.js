@@ -32,10 +32,6 @@ module.exports = function(eleventyConfig) {
   // _passthrough _redirects
   eleventyConfig.addPassthroughCopy("_redirects");
 
-  // have specifically md files use the default.njk layout if not specified
-  // This acts as a fallback for markdown files that don't specify a layout
-  eleventyConfig.addGlobalData("layout", "default.njk");
-  eleventyConfig.addWatchTarget("**/*.md");
 
   // Date formatting (human readable)
   eleventyConfig.addFilter("readableDate", dateObj => {
