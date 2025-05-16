@@ -5,7 +5,14 @@ const fs = require('fs');
 const matter = require('gray-matter');
 
 function configureMarkdown(permalinksEnabled = false) {
-  const md = markdownIt({ html: true }).use(markdownItAttrs);
+  // Configure markdown-it-attrs with explicit image support
+  const md = markdownIt({ html: true }).use(markdownItAttrs, {
+    allowedAttributes: ['id', 'class', 'style'],
+    leftDelimiter: '{',
+    rightDelimiter: '}',
+    // Make sure to include image processing
+    enableAttrImageFlag: true
+  });
 
   if (permalinksEnabled) {
     md.use(markdownItAnchor, {
@@ -23,13 +30,42 @@ function configureMarkdown(permalinksEnabled = false) {
     let lastLevel = 0;
     let sectionAttrs = '';
     let pendingSectionAttrs = '';
+    let pendingImageAttrs = '';
 
     tokens.forEach((token, index) => {
+      // Handle general attribute blocks
       if (token.type === 'inline' && token.content.startsWith('{') && token.content.endsWith('}')) {
         // This token is an attribute block, extract and store the attributes
         pendingSectionAttrs = token.content.slice(1, -1);
         // Skip adding this token to the result as it's not a part of the actual content
         return;
+      }
+
+      // Special handling for image attributes
+      if (token.type === 'inline' && token.children) {
+        // Look for image tokens followed by attribute blocks
+        for (let i = 0; i < token.children.length - 1; i++) {
+          const child = token.children[i];
+          const nextChild = token.children[i + 1];
+          
+          if (child.type === 'image' && nextChild.type === 'text' && 
+              nextChild.content.trim().startsWith('{') && nextChild.content.trim().endsWith('}')) {
+            // Extract attributes from the text token
+            const attrs = nextChild.content.trim().slice(1, -1);
+            
+            // Apply attributes directly to the image token
+            if (!child.attrs) child.attrs = [];
+            
+            // Parse the style attribute and add to image
+            const styleMatch = attrs.match(/style="([^"]*)"/);
+            if (styleMatch && styleMatch[1]) {
+              child.attrs.push(['style', styleMatch[1]]);
+              
+              // Remove the attribute block from the text token
+              nextChild.content = nextChild.content.replace(/{[^}]*}/, '');
+            }
+          }
+        }
       }
 
       if (token.type === 'heading_open') {

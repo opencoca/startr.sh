@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+style="background: rgb(2, 0, 36);
+    background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 66%, rgba(0, 213, 184, 1) 100%);
+    margin: -2.8em 1em;
+    --maxw: 100vw;"
+>
+  {% include "component/head.njk" %}
+
+  <body style="
+      --links:rgba(0, 213, 184, 1);
+      --size:1em;
+      --bg:transparent; 
+      --c:oklch(95% 0 200);
+      --ff:sans-serif; 
+      --p-sm:20px;
+      --d:flex; 
+      --fd:column; 
+      --ai:center; 
+      --jc:center;
+      overscroll-behavior: none !important;
+      ">
+      {% include "component/header.njk" %}
+    
+    <main style="
+      --d:flex; 
+      --fd:column; 
+      --ai:center; 
+      --jc:center;
+      --mt-sm:20px;
+      --maxw:40rem;">
+
+     {{ content | safe }}
+
+     </main>
+
+    <footer style="--d:flex; --ai:center; --jc:center; --w:100%; --p:20px; --bg:oklch(0.15 0.08 220); --mt:20px;     --br: 0.6em;">
+      <p style="--c:oklch(85% 0 50); --m:0;">© 2025 <a style="--c:var(--primary);" href="https://startr.cloud">Startr LLC</a> All rights reserved.</p>
+    </footer>
+  </body>

@@ -1,12 +1,14 @@
 ---
-
-title: Startr.sh Privacy Policy  
-
+layout: base
+title: Startr.sh Privacy Policy
 ---
-1. A comprehensive document detailing how we collect, use, and protect personal information in compliance with applicable laws. This page is crucial for transparency and trust-building, ensuring that your data is handled with the utmost care and respect for privacy.
+
+{style="--mt:-1em; --mt-sm:1em;--mb:8vh"}
+
+A comprehensive document detailing how we collect, use, and protect personal information in compliance with applicable laws. This page is crucial for transparency and trust-building, ensuring that your data is handled with the utmost care and respect for privacy.
 
 
-**PRIVACY POLICY**
+**PRIVACY POLICY** {style="--size:3em;"}
 
 **Last updated May 15, 2024**
 
@@ -15,11 +17,11 @@ This privacy notice for Startr LLC (doing business as Startr.cloud) ('**we**
 - Visit our website at [Startr.Cloud](https://startr.cloud), or any website of ours that links to this privacy notice
 - Engage with us in other related ways, including any sales, marketing, or events
 
-**Questions or concerns?** Reading this privacy notice will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at [ai.privacy@candians.love](mailto:ai.privacy@candians.love).
+**Questions or concerns?** Reading this privacy notice will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at [privacy@startr.cloud](mailto:privacy@startr.cloud).
 
 **SUMMARY OF KEY POINTS**
 
-***This summary provides key points from our privacy notice, but you can find out more details about any of these topics by clicking the link following each key point or by using our*** [table of contents](https://www.notion.so/Privacy-Policy-8d3eff1de683472484c277566d725c3a?pvs=21) ***below to find the section you are looking for.***
+***This summary provides key points from our privacy notice, but you can find out more details about any of these topics by clicking the link following each key point or by using our*** [table of contents](#TODO_fix_links) ***below to find the section you are looking for.***
 
 **What personal information do we process?** When you visit, use, or navigate our Services, we may process personal information depending on how you interact with us and the Services, the choices you make, and the products and features you use. Learn more about [personal information you disclose to us](#personalinfo).
 
@@ -38,6 +40,7 @@ This privacy notice for Startr LLC (doing business as Startr.cloud) ('**we**
 **How do you exercise your rights?** The easiest way to exercise your rights is by visiting candians.love/privacy/and-deleting-data, or by contacting us. We will consider and act upon any request in accordance with applicable data protection laws.
 
 Want to learn more about what we do with any information we collect? [Review the privacy notice in full](#toc).
+
 
 ## TABLE OF CONTENTS
 
@@ -206,7 +209,7 @@ Upon your request to terminate your account, we will deactivate or delete your a
 
 **Cookies and similar technologies:** Most Web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove cookies and to reject cookies. If you choose to remove cookies or reject cookies, this could affect certain features or services of our Services. For further information, please see our Cookie Notice: canadians.love/cookies.
 
-If you have questions or comments about your privacy rights, you may email us at privacy@candians.love.
+If you have questions or comments about your privacy rights, you may email us at privacy@startr.cloud.
 
 **10. CONTROLS FOR DO-NOT-TRACK FEATURES**
 

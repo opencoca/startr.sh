@@ -8,6 +8,16 @@ const { EleventyHtmlBasePlugin } = require("@11ty/eleventy");
 const sectionizePlugin = require("./_plugins/eleventy-plugin-sectionize");
 
 module.exports = function(eleventyConfig) {
+  // Add the sectionize plugin - direct invocation as it was designed
+  sectionizePlugin(eleventyConfig);
+  
+  // Add other plugins
+  eleventyConfig.addPlugin(pluginRss);
+  eleventyConfig.addPlugin(pluginSyntaxHighlight);
+  eleventyConfig.addPlugin(pluginBundle);
+  eleventyConfig.addPlugin(pluginNavigation);
+  eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
+  
   eleventyConfig.addPassthroughCopy({
     "./assets/": "/",
   });
@@ -22,8 +32,16 @@ module.exports = function(eleventyConfig) {
   // _passthrough _redirects
   eleventyConfig.addPassthroughCopy("_redirects");
 
-  //have specifically md files use the default.njk layout
 
+  // Date formatting (human readable)
+  eleventyConfig.addFilter("readableDate", dateObj => {
+    return DateTime.fromJSDate(dateObj, {zone: 'utc'}).toFormat("dd LLL yyyy");
+  });
+
+  // Date formatting (machine readable)
+  eleventyConfig.addFilter("machineDate", dateObj => {
+    return DateTime.fromJSDate(dateObj, {zone: 'utc'}).toFormat("yyyy-MM-dd");
+  });
 
   return {
     dir: {
