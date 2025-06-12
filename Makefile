@@ -1,6 +1,6 @@
 help: 
 	@echo "================================================"
-	@echo "       Startr.sh by Startr.Cloud"
+	@echo "       $(OWNER)/$(PROJECT_NAME) by Startr.Cloud"
 	@echo "================================================"
 	@echo "This is the default make command."
 	@echo "This command lists available make commands."
@@ -23,6 +23,11 @@ PROJECT := $(shell echo $$(basename $(PROJECTPATH)) | tr '[:upper:]' '[:lower:]'
 FULL_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 BRANCH := $(shell echo $(FULL_BRANCH) | sed 's/.*\///' | tr '[:upper:]' '[:lower:]')
 TAG := $(shell git describe --always --tag)
+
+# Extract owner and project from git remote URL
+REMOTE_URL := $(shell git config --get remote.origin.url 2>/dev/null || echo "unknown/unknown")
+OWNER := $(shell echo $(REMOTE_URL) | sed -E 's|.*[:/]([^/]+)/[^/]+(.git)?$$|\1|')
+PROJECT_NAME := $(shell echo $(REMOTE_URL) | sed -E 's|.*[:/][^/]+/([^/]+)(.git)?$$|\1|' | sed 's/\.git$$//')
 
 # Docker container name (dynamic based on project and branch)
 CONTAINER := $(PROJECT)-$(BRANCH)
@@ -48,10 +53,13 @@ show_vars:
 	@echo "=== Dynamic Variables ==="
 	@echo "PROJECTPATH=$(PROJECTPATH)"
 	@echo "PROJECT=$(PROJECT)"
+	@echo "OWNER=$(OWNER)"
+	@echo "PROJECT_NAME=$(PROJECT_NAME)"
 	@echo "FULL_BRANCH=$(FULL_BRANCH)"
 	@echo "BRANCH=$(BRANCH)"
 	@echo "TAG=$(TAG)"
 	@echo "CONTAINER=$(CONTAINER)"
+	@echo "REMOTE_URL=$(REMOTE_URL)"
 	@echo ""
 
 
@@ -94,25 +102,39 @@ deploy:
 
 minor_release:
 	# Start a minor release with incremented minor version
-	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2+1".0"}')
+	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2+1".0"}') && echo "or use 'make release_finish' to finish the release"
 
 patch_release:
 	# Start a patch release with incremented patch version
-	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3+1}')
+	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3+1}') && echo "or use 'make release_finish' to finish the release"
 
 major_release:
 	# Start a major release with incremented major version
-	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1+1".0.0"}')
+	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1+1".0.0"}') && echo "or use 'make release_finish' to finish the release"
 
 hotfix:
-	# Start a hotfix with incremented patch version
-	git flow hotfix start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3+1}')
+	# Start a hotfix with incremented n.n.n.n version (incrementing the fourth number)
+	git flow hotfix start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3"."$$4+1}') && echo "or use 'make hotfix_finish' to finish the hotfix"
 
 release_finish:
 	git flow release finish "$$(git branch --show-current | sed 's/release\///')" && git push origin develop && git push origin master && git push --tags && git checkout develop
 
 hotfix_finish:
-	git flow hotfix finish "$$(git branch --show-current | sed 's/hotfix\///')" && git push origin develop && git push origin master && git push --tags && git checkout develop
+	git flow hotfix finish "$$(git branch --show-current | sed 's/hotfix\///')" && git push origin develop && git push origin master && git push --tags && git checkout master
 
 things_clean:
 	git clean --exclude=!.env -Xdf
+
+setup:
+	@echo "Setting up local development environment..."
+	@if [ ! -f .env ]; then \
+		echo "Creating .env file with default values..."; \
+		echo "SERVER__HOST=localhost" > .env; \
+		echo "SERVER__USER=root" >> .env; \
+		echo "SERVER__CONTAINER_FILTER=" >> .env; \
+		echo "GITHUB_CLIENT_ID=Ov23lic87oTTC3OljekI" >> .env; \
+		echo "GITHUB_CLIENT_SECRET=your_github_client_secret_here" >> .env; \
+		echo "NODE_ENV=development" >> .env; \
+		echo "You can customize the .env file later."; \
+	fi
+	@echo "Setup complete! Local development environment is ready."
