@@ -2,6 +2,51 @@
 
 ## Documentation & Resource Sharing TODOs
 
+### **[CEP] Common Enlightenment Protocol Implementation**
+- [ ] **Create CEP Directory Structure**: Set up Common Enlightenment Protocol folder
+  - [ ] Create `src/cep/` directory for CEP resources
+  - [ ] Create hard links to `CONVENTION.instructions.md` in CEP folder
+  - [ ] Create hard links to `docs/DEVELOPMENT_WORKFLOW.md` in CEP folder
+  - [ ] Test hard link functionality and maintenance
+  - [ ] Verify file synchronization between original and CEP copies
+
+- [ ] **Create CEP Index Script/Page**: Dual-purpose deployment and explanation
+  - [ ] Design `src/cep/index.njk` following `src/index.njk` pattern
+  - [ ] Create CEP deployment script functionality (bash section)
+  - [ ] Create CEP explanation page (HTML section)
+  - [ ] Follow `_includes/home_page.njk` structure for page layout
+  - [ ] Implement script that deploys CEP files to target projects
+  - [ ] Add interactive options for CEP deployment
+  - [ ] Test both script and page functionality
+
+- [ ] **Create CEP Page Template**: Following established patterns
+  - [ ] Create `src/cep/_includes/cep_page.njk` template
+  - [ ] Design CEP branding and visual identity
+  - [ ] Add explanation of Common Enlightenment Protocol concepts
+  - [ ] Include usage examples and best practices
+  - [ ] Add download/deployment instructions
+  - [ ] Create responsive design following site standards
+  - [ ] Test page rendering and functionality
+
+- [ ] **CEP Deployment Logic**: Script functionality for project setup
+  - [ ] Implement file detection and project analysis
+  - [ ] Add CEP file deployment to target directories
+  - [ ] Create backup mechanism for existing files
+  - [ ] Add conflict resolution for existing conventions
+  - [ ] Implement verification and validation checks
+  - [ ] Add rollback functionality for failed deployments
+  - [ ] Test deployment across different project types
+  - [ ] Create deployment logging and reporting
+
+- [ ] **Research Eleventy Includes Optimization**: Improve CEP self-containment
+  - [ ] Research 11ty documentation for local includes configuration
+  - [ ] Investigate options to keep CEP includes within `src/cep/` folder
+  - [ ] Test alternative include paths and configurations
+  - [ ] Evaluate benefits of self-contained vs shared includes approach
+  - [ ] Implement optimized include structure if beneficial
+  - [ ] Update CEP template structure based on findings
+  - [ ] Document best practices for future reference
+
 ### **[DOCUMENTATION] Standardized Makefile Documentation**
 - [x] **Create docs/ directory structure**: Set up comprehensive documentation folder
   - [x] Create `docs/` directory
@@ -103,6 +148,12 @@
 
 ## Implementation Priority
 
+**Phase 0: CEP Foundation (Current Sprint)**
+- Create CEP directory structure with hard links
+- Design and implement CEP index.njk (script + page)
+- Create CEP page template following established patterns
+- Implement basic CEP deployment functionality
+
 **Phase 1: Foundation (Week 1)**
 - Create docs/ directory structure
 - Create basic Makefile documentation
@@ -112,17 +163,20 @@
 - Create resource download system
 - Enhance startr.sh script with download flags
 - Create standardized templates
+- Complete CEP deployment logic and testing
 
 **Phase 3: Web Integration (Week 3)**
 - Integrate documentation into website
 - Add interactive examples
 - Enable documentation navigation
+- Add CEP access from main site
 
 **Phase 4: Testing & Polish (Week 4)**
 - Comprehensive testing
 - Automated testing setup
 - Performance optimization
 - Final documentation review
+- CEP validation and refinement
 
 ## Notes
 - Follow CONVENTION.instructions.md for all development
