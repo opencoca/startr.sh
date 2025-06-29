@@ -1,4 +1,6 @@
-# startr.sh v0.1.1
+# startr.sh v0.2.0
+
+## Now with the power of the CEP (Common Enlightenment Protocol or the Conventional Environment Protocol)!
 
 > The ultimate launchpad for your development projects following industry best practices.
 
