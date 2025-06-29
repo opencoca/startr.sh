@@ -1,8 +1,8 @@
-# startr.sh v0.1.1
+# startr.sh v0.2.0
 
-# Now works with Python, Django, Flask, Node, and Startr.Style CSS and more spaces!!!
+## Now with the power of the CEP (Common Enlightenment Protocol or the Conventional Environment Protocol)!
 
-Startr.sh: The best way to Build and Launch Projects following industry and coding best practices. 
+> The ultimate launchpad for your development projects following industry best practices.
 
 Startr.sh - is the ultimate launchpad for your development projects! With a simple terminal command, `bash <(curl -sL startr.sh)`, you can set up your project environment in no time. Streamline your Docker image creation process and say goodbye to tedious setup and configuration.
 
@@ -11,6 +11,36 @@ Startr.sh is designed to enhance your development workflow, regardless of the fr
 The service is backed by experienced developers who've mastered the art of project deployment. They provide the tools and insights needed to launch your projects reliably and quickly, saving you precious time and effort.
 
 Make your development process effortless and focus on what matters most - your code. Get started with Startr.sh today and experience the convenience of one-command project setup!
+
+## Quick Start
+
+```bash
+# Build and run your project
+bash <(curl -sL startr.sh)
+
+# Or use the standardized Makefile
+make it_run
+```
+
+## What is Startr.sh?
+
+Startr.sh is both **a landing page** and **the actual script** - when you visit [startr.sh](https://startr.sh), you're seeing an HTML page that contains the complete bash script. This innovative approach means the documentation and script are always in sync.
+
+Startr.sh automatically detects your project type (Python, Django, Flask, Node.js, static sites) and creates the appropriate Docker setup, streamlining your development workflow.
+
+## 📖 Documentation
+
+- **[Complete Documentation](docs/)** - Comprehensive guides and references
+- **[Standardized Makefile](docs/makefile/)** - One-command build and deployment
+- **[Development Workflow](docs/development/DEVELOPMENT_WORKFLOW.md)** - SOLID principles and best practices
+
+## Features
+
+- ✅ **Smart Detection** - Automatically identifies your project type
+- ✅ **Docker Integration** - Builds and runs containers seamlessly  
+- ✅ **Standardized Makefile** - Consistent commands across all projects
+- ✅ **Git Flow Support** - Release management built-in
+- ✅ **CapRover Deployment** - One-command production deployment
 
 ## How it works
 

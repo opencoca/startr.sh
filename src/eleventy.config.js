@@ -32,6 +32,9 @@ module.exports = function(eleventyConfig) {
   // _passthrough _redirects
   eleventyConfig.addPassthroughCopy("_redirects");
 
+  // Copy markdown files from the cep directory
+  eleventyConfig.addPassthroughCopy("cep/**/*.md");
+
 
   // Date formatting (human readable)
   eleventyConfig.addFilter("readableDate", dateObj => {

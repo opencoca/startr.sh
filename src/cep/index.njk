@@ -1,0 +1,131 @@
+#!/bin/bash -e
+<<html_content #>
+{% include "cep/_includes/cep_page.njk" %}
+#{% raw %}
+html_content
+#--><pre style="--h: 20em; --of:scroll; --maxw: 100%; --size:0.4rem; --bg:rgba(255, 255, 255, 0.055); --b:0.2em solid rgba(184, 0, 100, 1); --br:0.6em; --p: 1em; box-shadow: 0 0 10px rgba(184, 0, 100, 0.5); --c:rgba(184, 0, 100, 1)">
+#!/bin/bash
+#
+# Version 1.0.0
+#
+# Copyright (c) Startr LLC. All rights reserved.
+# This script is licensed under the GNU Affero General Public License v3.0.
+# For more information, see https://www.gnu.org/licenses/agpl-3.0.en.html
+#
+# Common Enlightenment Protocol (CEP) Deployment Script
+# This script deploys development standards to the current project.
+#
+# `curl startr.sh/cep|bash` to run this script
+#
+
+# --- ASCII Art & Introduction ---
+
+cep_art="
+    ______   _______   ______    
+   / ____/  / ____/ | / / __ \   
+  / /      / __/ /  |/ / /_/ /   
+ / /___   / /___/ /|  / ____/    
+ \____/  /_____/_/ |_/_/         
+                                
+Common Enlightenment Protocol
+"
+
+about_cep="
+CEP deploys battle-tested development standards to your project, including:
+- CONVENTION.instructions.md (SOLID, YAGNI, KISS, DRY)
+- DEVELOPMENT_WORKFLOW.md (Plan-Document-Execute-Verify)
+
+This ensures your project follows proven conventions and workflows from day one.
+"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Emojis
+SETUP_EMOJI='🛠️'
+SUCCESS_EMOJI='✅'
+ERROR_EMOJI='❌'
+
+echo -e "${BLUE}${cep_art}${NC}"
+echo -e "${YELLOW}${about_cep}${NC}"
+
+# --- Main Logic ---
+
+# Function to check if in a git repository
+check_git_repo() {
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        echo -e "${RED}${ERROR_EMOJI} You are not in a git repository.${NC}"
+        echo -e "${YELLOW}CEP should be run in the root of a git project."
+        echo -e "${BLUE}Would you like to initialize a new git repository here? (y/n):${NC}"
+        read -r INIT_REPO
+        if [ "$INIT_REPO" == "y" ]; then
+            git init
+            echo -e "${GREEN}${SUCCESS_EMOJI} New git repository initialized.${NC}"
+        else
+            echo -e "${RED}Exiting. Please run CEP from a git repository.${NC}"
+            exit 1
+        fi
+    fi
+}
+
+# Function to deploy CEP files
+deploy_cep_files() {
+    echo -e "${BLUE}${SETUP_EMOJI} Deploying CEP files...${NC}"
+
+    # Define file URLs and target paths
+    CONVENTION_URL="https://startr.sh/cep/CONVENTION.instructions.md"
+    WORKFLOW_URL="https://startr.sh/cep/DEVELOPMENT_WORKFLOW.md"
+    # Define target paths
+    TARGET_CONVENTION="./CONVENTION.instructions.md"
+    TARGET_DOCS_DIR="./docs"
+    TARGET_WORKFLOW="${TARGET_DOCS_DIR}/DEVELOPMENT_WORKFLOW.md"
+
+    # Check for existing files and ask for confirmation
+    if [ -f "$TARGET_CONVENTION" ] || [ -f "$TARGET_WORKFLOW" ]; then
+        echo -e "${YELLOW}CEP files already exist. Overwriting will replace existing conventions."
+        echo -e "${BLUE}Do you want to overwrite them? (y/n):${NC}"
+        read -r OVERWRITE
+        if [ "$OVERWRITE" != "y" ]; then
+            echo -e "${RED}Aborted. No files were changed.${NC}"
+            exit 1
+        fi
+    fi
+
+    # Create docs directory if it doesn't exist
+    if [ ! -d "$TARGET_DOCS_DIR" ]; then
+        mkdir -p "$TARGET_DOCS_DIR"
+    fi
+
+    # Download and deploy files
+    echo -e "${BLUE}Downloading CONVENTION.instructions.md...${NC}"
+    if curl -sL "$CONVENTION_URL" -o "$TARGET_CONVENTION"; then
+        echo -e "${GREEN}${SUCCESS_EMOJI} Deployed CONVENTION.instructions.md${NC}"
+    else
+        echo -e "${RED}${ERROR_EMOJI} Failed to download CONVENTION.instructions.md${NC}"
+        exit 1
+    fi
+
+    echo -e "${BLUE}Downloading DEVELOPMENT_WORKFLOW.md...${NC}"
+    if curl -sL "$WORKFLOW_URL" -o "$TARGET_WORKFLOW"; then
+        echo -e "${GREEN}${SUCCESS_EMOJI} Deployed DEVELOPMENT_WORKFLOW.md to docs/${NC}"
+    else
+        echo -e "${RED}${ERROR_EMOJI} Failed to download DEVELOPMENT_WORKFLOW.md${NC}"
+        exit 1
+    fi
+}
+
+# --- Execution ---
+
+check_git_repo
+deploy_cep_files
+
+echo -e "\n${GREEN}${SUCCESS_EMOJI} CEP deployment complete!${NC}"
+echo -e "${YELLOW}Your project is now set up with proven development standards.${NC}"
+
+#
+# That's all folks {% endraw %}
+#</pre></body></html>
