@@ -1,4 +1,4 @@
-# startr.sh v0.2.0
+# startr.sh v0.2.1
 
 ## Now with the power of the CEP (Common Enlightenment Protocol or the Conventional Environment Protocol)!
 
