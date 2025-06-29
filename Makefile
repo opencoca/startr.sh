@@ -138,3 +138,80 @@ setup:
 		echo "You can customize the .env file later."; \
 	fi
 	@echo "Setup complete! Local development environment is ready."
+
+cep_fix_links:
+	@echo "Fixing CEP hard links after git operations..."
+	@if [ ! -d src/cep ]; then \
+		echo "Creating CEP directory..."; \
+		mkdir -p src/cep; \
+	fi
+	@echo "Recreating hard links for CEP files..."
+	@if [ -f src/cep/CONVENTION.instructions.md ]; then \
+		rm src/cep/CONVENTION.instructions.md; \
+	fi
+	@if [ -f src/cep/DEVELOPMENT_WORKFLOW.md ]; then \
+		rm src/cep/DEVELOPMENT_WORKFLOW.md; \
+	fi
+	@ln CONVENTION.instructions.md src/cep/CONVENTION.instructions.md
+	@ln docs/DEVELOPMENT_WORKFLOW.md src/cep/DEVELOPMENT_WORKFLOW.md
+	@echo "CEP hard links recreated successfully!"
+	@echo "Verifying links..."
+	@ls -li CONVENTION.instructions.md src/cep/CONVENTION.instructions.md | awk '{print "CONVENTION inode: " $$1}'
+	@ls -li docs/DEVELOPMENT_WORKFLOW.md src/cep/DEVELOPMENT_WORKFLOW.md | awk '{print "WORKFLOW inode: " $$1}'
+
+cep_status:
+	@echo "=== CEP Hard Links Status ==="
+	@if [ -f src/cep/CONVENTION.instructions.md ]; then \
+		echo "CONVENTION.instructions.md:"; \
+		ls -li CONVENTION.instructions.md src/cep/CONVENTION.instructions.md; \
+		if [ "$$(stat -f '%i' CONVENTION.instructions.md 2>/dev/null)" = "$$(stat -f '%i' src/cep/CONVENTION.instructions.md 2>/dev/null)" ]; then \
+			echo "✅ Hard link is working"; \
+		else \
+			echo "❌ Hard link is broken"; \
+		fi; \
+	else \
+		echo "❌ CEP CONVENTION.instructions.md not found"; \
+	fi
+	@echo ""
+	@if [ -f src/cep/DEVELOPMENT_WORKFLOW.md ]; then \
+		echo "DEVELOPMENT_WORKFLOW.md:"; \
+		ls -li docs/DEVELOPMENT_WORKFLOW.md src/cep/DEVELOPMENT_WORKFLOW.md; \
+		if [ "$$(stat -f '%i' docs/DEVELOPMENT_WORKFLOW.md 2>/dev/null)" = "$$(stat -f '%i' src/cep/DEVELOPMENT_WORKFLOW.md 2>/dev/null)" ]; then \
+			echo "✅ Hard link is working"; \
+		else \
+			echo "❌ Hard link is broken"; \
+		fi; \
+	else \
+		echo "❌ CEP DEVELOPMENT_WORKFLOW.md not found"; \
+	fi
+
+install_hooks:
+	@echo "Installing git hooks..."
+	@if [ ! -d scripts/hooks ]; then \
+		echo "❌ scripts/hooks directory not found"; \
+		exit 1; \
+	fi
+	@for hook in scripts/hooks/*; do \
+		if [ -f "$$hook" ]; then \
+			hook_name=$$(basename "$$hook"); \
+			echo "Installing $$hook_name hook..."; \
+			cp "$$hook" ".git/hooks/$$hook_name"; \
+			chmod +x ".git/hooks/$$hook_name"; \
+			echo "✅ $$hook_name hook installed"; \
+		fi; \
+	done
+	@echo "🎉 All hooks installed successfully!"
+
+uninstall_hooks:
+	@echo "Uninstalling project-specific git hooks..."
+	@for hook in scripts/hooks/*; do \
+		if [ -f "$$hook" ]; then \
+			hook_name=$$(basename "$$hook"); \
+			if [ -f ".git/hooks/$$hook_name" ]; then \
+				echo "Removing $$hook_name hook..."; \
+				rm ".git/hooks/$$hook_name"; \
+				echo "✅ $$hook_name hook removed"; \
+			fi; \
+		fi; \
+	done
+	@echo "🎉 All project hooks uninstalled!"

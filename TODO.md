@@ -3,12 +3,16 @@
 ## Documentation & Resource Sharing TODOs
 
 ### **[CEP] Common Enlightenment Protocol Implementation**
-- [ ] **Create CEP Directory Structure**: Set up Common Enlightenment Protocol folder
-  - [ ] Create `src/cep/` directory for CEP resources
-  - [ ] Create hard links to `CONVENTION.instructions.md` in CEP folder
-  - [ ] Create hard links to `docs/DEVELOPMENT_WORKFLOW.md` in CEP folder
-  - [ ] Test hard link functionality and maintenance
-  - [ ] Verify file synchronization between original and CEP copies
+- [x] **Create CEP Directory Structure**: Set up Common Enlightenment Protocol folder
+  - [x] Create `src/cep/` directory for CEP resources
+  - [x] Create hard links to `CONVENTION.instructions.md` in CEP folder
+  - [x] Create hard links to `docs/DEVELOPMENT_WORKFLOW.md` in CEP folder
+  - [x] Test hard link functionality and maintenance
+  - [x] Verify file synchronization between original and CEP copies
+  - [x] Create Makefile targets for CEP hard link management (`cep_fix_links`, `cep_status`)
+  - [x] Create git post-checkout hook for automatic hard link recreation
+  - [x] Add hook installation targets (`install_hooks`, `uninstall_hooks`)
+  - [x] Test automated hard link restoration after git operations
 
 - [ ] **Create CEP Index Script/Page**: Dual-purpose deployment and explanation
   - [ ] Design `src/cep/index.njk` following `src/index.njk` pattern
@@ -183,3 +187,8 @@
 - Update this TODO.md as work progresses
 - Check off completed items
 - Add new tasks as discovered during implementation
+- **CEP Hard Links**: Git operations (checkout, reset) break hard links by creating new files
+  - Use `make cep_fix_links` to manually restore hard links
+  - Use `make cep_status` to check hard link status
+  - Use `make install_hooks` to enable automatic restoration via git post-checkout hook
+  - Hook automatically runs after `git checkout` operations
