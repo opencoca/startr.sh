@@ -1,6 +1,54 @@
 # TODO - Startr.sh Development Tasks
 
+## Project Philosophy & Vision
+
+### **The Startr Enlightenment**
+This project embodies a philosophy of **Radical Simplification** in software development - the belief that the most powerful tools are those that eliminate complexity rather than add it.
+
+**Core Tenets:**
+1. **Immediate Value**: Every tool should provide instant, tangible benefit (`curl | bash` and you're productive)
+2. **Transparency by Design**: No black boxes - every script is human-readable and self-documenting
+3. **Battle-Tested Over Bleeding-Edge**: We prefer proven patterns over innovative complexity
+4. **Standards as Code**: Development conventions should be as versionable and deployable as the code itself
+5. **Enlightenment Through Convention**: True freedom comes from agreed-upon constraints that eliminate decision fatigue
+
+**The CEP Vision:**
+Common Enlightenment Protocol represents our belief that development teams spend too much time reinventing basic project conventions. CEP asks: "What if following best practices was as easy as running a single command?"
+
+**Philosophical Opposition:**
+- Against "Configuration Hell" - endless setup before productivity
+- Against "Framework Lock-in" - tools should enhance, not control
+- Against "Documentation Rot" - living documentation that stays current with practice
+- Against "Tribal Knowledge" - conventions should be explicit and transferable
+
+### **[PHILOSOPHY IMPLEMENTATION] Living Philosophy Documentation**
+- [ ] **Create Philosophy Documentation**: Articulate and formalize project beliefs
+  - [ ] Create `docs/philosophy/` directory for philosophical documentation
+  - [ ] Document "Radical Simplification" principles with examples
+  - [ ] Create manifesto explaining anti-patterns we actively oppose
+  - [ ] Document decision-making framework based on core tenets
+  - [ ] Add philosophy section to main README.md
+  - [ ] Create examples showing philosophy in practice
+  - [ ] Link philosophy to technical decisions in codebase
+
+- [ ] **Philosophy-Driven Development Guidelines**: Ensure all code follows philosophy
+  - [ ] Create code review checklist based on core tenets
+  - [ ] Document how to evaluate new features against philosophy
+  - [ ] Create rejection criteria for complexity-adding proposals
+  - [ ] Add philosophy validation to automated testing
+  - [ ] Document how to explain philosophy to new contributors
+  - [ ] Create philosophy-based troubleshooting guides
+
 ## Documentation & Resource Sharing TODOs
+
+### **[DOCUMENTATION] SEO and Site Structure Optimization**
+- [x] **Reorganize Marketing Documentation**: Move content to appropriate src docs structure
+  - [x] Create `src/docs/` directory for site documentation
+  - [x] Rename `docs/why.md` to SEO-friendly name (`startr-benefits-for-development-teams.md`)
+  - [ ] Move marketing content from repo docs to src docs
+  - [ ] Update navigation and internal links
+  - [ ] Verify SEO optimization of new structure
+  - [ ] Test that content is properly served by site
 
 ### **[CEP] Common Enlightenment Protocol Implementation**
 - [x] **Create CEP Directory Structure**: Set up Common Enlightenment Protocol folder

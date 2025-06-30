@@ -8,9 +8,6 @@ applyTo: "*"
 Every development task follows the **Plan-Document-Execute-Verify** cycle:
 
 0. Zeroth Principle: **Follow the Standards**
-  - **SOLID** - Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
-  - **YAGNI** - You Aren't Gonna Need It (don't add features until needed)
-  - **KISS** - Keep It Simple, Stupid
   - **DRY** - Don't Repeat Yourself (ever in Code)
   - **KISS** - Keep It Simple, Stupid
 1. **Plan** - Add to TODO.md before doing any work
