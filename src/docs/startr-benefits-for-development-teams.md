@@ -1,14 +1,14 @@
 Why Startr.sh and CEP Transform Development Teams
 =================================================
 
-Development teams waste weeks on project setup. We used to spend up to three weeks configuring Docker environments for our new microservice projects. We lost Weeks of billable hours before writing a single line of business logic.
+Development teams waste weeks on project setup. Heck, we used to spend up to three weeks configuring Docker environments for our new microservice projects. We lost weeks of hours before writing a single line of real project code.
 
-We are aware that this situation occurs daily across thousands of organizations. So, we created **Startr.sh**, and the Startr **Common Enlightenment Protocol (CEP)** eliminates this waste.
+It was happening to us, and we are aware that this situation occurs daily across thousands of organizations. So, we created **Startr.sh**, and the Startr **Common Enlightenment Protocol (CEP)** eliminates this waste.
 
 One Command Replaces Weeks of Setup
 -----------------------------------
 
-Startr.sh reduces project initialization to a single command: bash <(curl -sL startr.sh). The tool detects your project type (Python, Django, Flask, Node.js, or static sites) and then creates the appropriate Docker configurations automatically.
+Startr.sh reduces project initialization to a single command: `bash <(curl -sL startr.sh)`. The tool detects your project type (Python, Django, Flask, Node.js, or static sites) and then creates the appropriate Docker configurations automatically.
 
 Once we started projects with startr.sh our developers were productive on day one instead of day twenty-one.
 
