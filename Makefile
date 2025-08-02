@@ -185,6 +185,32 @@ cep_status:
 		echo "❌ CEP DEVELOPMENT_WORKFLOW.md not found"; \
 	fi
 
+docs_fix_links:
+	@echo "Creating documentation symlinks for website..."
+	@mkdir -p src/docs
+	@cd src/docs && ln -sf ../../docs/makefile/README.md makefile-guide.md
+	@cd src/docs && ln -sf ../../docs/makefile/commands.md makefile-commands.md
+	@cd src/docs && ln -sf ../../docs/makefile/variables.md makefile-variables.md
+	@cd src/docs && ln -sf ../../docs/makefile/deployment.md makefile-deployment.md
+	@echo "✅ Documentation symlinks created successfully!"
+
+docs_status:
+	@echo "=== Documentation Symlinks Status ==="
+	@for doc in makefile-guide makefile-commands makefile-variables makefile-deployment; do \
+		if [ -L "src/docs/$$doc.md" ]; then \
+			echo "$$doc.md:"; \
+			ls -la "src/docs/$$doc.md"; \
+			if [ -f "src/docs/$$doc.md" ]; then \
+				echo "✅ Symlink is working"; \
+			else \
+				echo "❌ Symlink is broken"; \
+			fi; \
+		else \
+			echo "❌ $$doc.md symlink not found"; \
+		fi; \
+		echo ""; \
+	done
+
 install_hooks:
 	@echo "Installing git hooks..."
 	@if [ ! -d scripts/hooks ]; then \

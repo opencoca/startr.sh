@@ -125,8 +125,10 @@ Common Enlightenment Protocol represents our belief that development teams spend
 
 ### **[RESOURCE SHARING] Enhanced Startr.sh Resource Distribution**
 - [ ] **Create Resource Download System**: Help users get standard files
-  - [ ] Design resource endpoint structure (`/resources/makefile`, `/resources/dockerfile`, etc.)
+  - [ ] We will symlink our actual resources to the `/resources/` directory at times they will be in subdirectories and or have seo-friendly names
+  - [ ] Research and implement symlink strategy for resources
   - [ ] Create `src/resources/` directory for downloadable resources
+  
   - [ ] Add standardized Makefile to downloadable resources
   - [ ] Add standardized Dockerfile templates to resources
   - [ ] Add standardized .gitignore templates to resources
