@@ -301,8 +301,10 @@ PROJECTPATH="$(git rev-parse --show-toplevel)"
 PROJECT=$(echo ${PROJECTPATH##*/} | awk '{print tolower($0)}')
 # Set FULL_BRANCH to the name of the current Git branch
 FULL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-# Set BRANCH to the lowercase version of this name, with everything after the last forward slash removed
+# remove everything after the last forward slash removed
 BRANCH=${FULL_BRANCH##*/}
+# Make BRANCH lowercase using bash parameter expansion
+BRANCH="${BRANCH,,}"
 # Set TAG to the output of the git describe --always --tag command, which returns a "unique identifier" for the current commit
 TAG=$(git describe --always --tag)
 

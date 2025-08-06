@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Git post-checkout hook for CEP (Common Enlightenment Protocol)
+# Automatically fixes CEP hard links after checkout operations
+#
+# Installation:
+#   cp scripts/hooks/post-checkout .git/hooks/post-checkout
+#   chmod +x .git/hooks/post-checkout
+#
+# Or use: make install_hooks
+#
+# This hook is called after a successful 'git checkout'.
+# Parameters: $1 = previous HEAD, $2 = new HEAD, $3 = flag (1 for branch checkout, 0 for file checkout)
+
+# Only run on branch checkouts (not file checkouts)
+if [ "$3" = "1" ]; then
+    echo "🔗 Post-checkout: Fixing CEP hard links..."
+    
+    # Check if we're in the right directory (has Makefile with cep_fix_links target)
+    if [ -f Makefile ] && grep -q "cep_fix_links:" Makefile; then
+        make cep_fix_links
+    else
+        echo "⚠️  CEP hard link fix not available (no Makefile with cep_fix_links target)"
+    fi
+fi
