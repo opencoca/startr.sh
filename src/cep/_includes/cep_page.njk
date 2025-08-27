@@ -20,8 +20,8 @@ style="background: rgb(36, 0, 2);
       --jc:center;
       overscroll-behavior: none !important;
       ">
-      {% include "component/header.njk" %}
-    
+    {% include "component/header.njk" %}
+
     <main style="
       --d:flex; 
       --fd:column; 
@@ -29,9 +29,11 @@ style="background: rgb(36, 0, 2);
       --jc:center;
       --mt-sm:20px;
       --w:100%;">
-      <h1 style="--ta:center;"><span>CEP</span></h1>
+      <h1 style="--ta:center;">
+        <span>CEP</span></h1>
       <p style="--ta:center;">Common Enlightenment Protocol</p>
-      <h2 style="--ta:center;">Instant <span>Development Standards</span> for Your <b>Project</b></h2>
+      <h2 style="--ta:center;">Instant <span>Development Standards</span> for Your <b>Project</b>
+      </h2>
       <p style="--ta:center;">Deploy proven development conventions and workflows to any project</p>
       <code style="
         --bg:oklch(30% 0.05 250); 
@@ -53,30 +55,55 @@ style="background: rgb(36, 0, 2);
       <div style="--d:grid; --grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); --g:20px; --w:100%; --maxw:800px; --mt:20px;">
         <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
           <h3 style="--size:18px; --weight:bold; --mb:10px;">📋 SOLID Principles</h3>
-          <p style="--size:14px;">Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion</p>
+          <details style="--bg:oklch(0.15 0.08 300);">
+            <summary style="--size:14px; --weight:bold; --bg:oklch(0.15 0.08 300);">What are SOLID Principles?</summary>
+            <div style="--size:14px;">
+          Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
         </div>
-        
+          </details>
+        </div>
+
         <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
-          <h3 style="--size:18px; --weight:bold; --mb:10px;">⚡ YAGNI + KISS</h3>
-          <p style="--size:14px;">You Aren't Gonna Need It + Keep It Simple, Stupid - Build only what you need, simply</p>
+          <h3 style="--size:18px; --weight:bold; --mb:10px;">⚡ YAGNI and a DRY KISS</h3>
+          <details style="--bg:oklch(0.15 0.08 300);">
+            <summary style="--size:14px; --weight:bold; --bg:oklch(0.15 0.08 300);">Why YAGNI, DRY, and KISS?</summary>
+            <div style="--size:14px;">
+              <b>YAGNI</b>: "You Aren't Gonna Need It" – Don't build features until they're truly needed.<br>
+              <b>DRY</b>: "Don't Repeat Yourself" – Copy-paste is the enemy; keep your code clean and reusable.<br>
+              <b>KISS</b>: "Keep It Simple, Stupid" – Complexity is costly; simple solutions win.<br>
+              <span style="--c:oklch(85% 0 330);">Build only what you need, as simply as possible. Your future self will thank you!</span>
+            </div>
+          </details>
         </div>
-        
+
         <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
           <h3 style="--size:18px; --weight:bold; --mb:10px;">🔄 Plan-Execute-Verify</h3>
-          <p style="--size:14px;">Structured development workflow: Plan → Document → Execute → Verify</p>
+          <details style="--bg:oklch(0.15 0.08 300);">
+            <summary style="--size:14px; --weight:bold; --bg:oklch(0.15 0.08 300);">How does the workflow work?</summary>
+            <div style="--size:14px;">
+          Structured development workflow: Plan → Document → Execute → Verify
         </div>
-        
+          </details>
+        </div>
+
         <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
           <h3 style="--size:18px; --weight:bold; --mb:10px;">📚 Living Documentation</h3>
-          <p style="--size:14px;">Convention files that stay in sync with your development practices</p>
+          <details style="--bg:oklch(0.15 0.08 300);">
+            <summary style="--size:14px; --weight:bold; --bg:oklch(0.15 0.08 300);">What is Living Documentation?</summary>
+            <div style="--size:14px;">
+          Convention files that stay in sync with your development practices
+        </div>
+          </details>
         </div>
       </div>
 
       <h3 style="--size:28px; --weight:bold; --ta:center; --mt:30px;">Deploy Standards Instantly!</h3>
 
       <div style="--d:flex; --jc:center; --mt:20px; --gap:10px; --flex-wrap:wrap;">
-        <a href="https://github.com/Startr/WEB-DEV-startr.sh"><button
-            style="--p:10px 20px; --bg:oklch(33% 45% 320deg); --radius:5px;">GitHub</button></a>
+        <a href="https://github.com/Startr/WEB-DEV-startr.sh">
+          <button
+            style="--p:10px 20px; --bg:oklch(33% 45% 320deg); --radius:5px;">GitHub</button>
+        </a>
         <button
           style="--d:none;--p:10px 20px; --bg:oklch(0.5 0.3 300); --c:oklch(95% 0 100); --border:none; --radius:5px;">
           Documentation</button>
@@ -86,17 +113,18 @@ style="background: rgb(36, 0, 2);
     <details style="--mt:1.6em">
       <summary>What does CEP include?</summary>
       <fun-quote style="--d:flex; --ai:center; --jc:center; --w:80%;--m:auto; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
-        <span>CEP deploys CONVENTION.instructions.md and DEVELOPMENT_WORKFLOW.md to your project, establishing proven development standards and workflows. <a href="https://github.com/Startr/WEB-DEV-startr.sh/tree/develop/src/cep">View the files here.</a></span>
+        <span>CEP deploys CONVENTION.instructions.md and DEVELOPMENT_WORKFLOW.md to your project, establishing proven development standards and workflows. <a href="https://github.com/Startr/WEB-DEV-startr.sh/tree/develop/src/cep">View the files here.</a>
+        </span>
       </fun-quote>
     </details>
-    
+
     <details>
       <summary>How does it work?</summary>
       <fun-quote style="--d:flex; --ai:center; --jc:center; --w:90%; --m:auto; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
         <span>Run <code>curl startr.sh/cep | bash</code> in your project directory. CEP detects your project structure and deploys appropriate development standards. The script at the bottom shows exactly what it does.</span>
       </fun-quote>
     </details>
-    
+
     <footer style="--d:flex; --ai:center; --jc:center; --w:100%; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --br: 0.6em;">
       <p style="--c:oklch(85% 0 50); --m:0;">© 2025 <a style="--c:var(--primary);" href="https://startr.cloud">Startr LLC</a> All rights reserved.</p>
     </footer>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"
+style="background: rgb(36, 0, 2);
+    background: linear-gradient(180deg, rgba(36, 0, 2, 1) 0%, rgba(121, 9, 9, 1) 66%, rgba(184, 0, 100, 1) 100%);
+    margin: -2.8em 1em;
+    --maxw: 100vw;"
+>
+  {% include "component/head.njk" %}
+
+  <body style="
+      --links:rgba(184, 0, 100, 1);
+      --size:1em;
+      --bg:transparent; 
+      --c:oklch(95% 0 200);
+      --ff:sans-serif; 
+      --p-sm:20px;
+      --d:flex; 
+      --fd:column; 
+      --ai:center; 
+      --jc:center;
+      overscroll-behavior: none !important;
+      ">
+      {% include "component/header.njk" %}
+    
+    <main style="
+      --d:flex; 
+      --fd:column; 
+      --ai:center; 
+      --jc:center;
+      --mt-sm:20px;
+      --w:100%;">
+      <h1 style="--ta:center;"><span>Linktree Builder</span></h1>
+      <p style="--ta:center;">HTML-Wrapped Script Magic</p>
+      <h2 style="--ta:center;">🚀 Sets up <span>Linktree-style</span> <b>11ty + Decap CMS</b> project!!!</h2>
+      <p style="--ta:center;">Complete project setup with CMS admin interface in one command</p>
+      <code style="
+        --bg:oklch(30% 0.05 250); 
+        --c:oklch(85% 0 320);
+        --p:0.6em 0.6em;  
+        --p-sm:10px 20px;  
+        --br:5px;
+        --m: 1rem 2rem;
+        --m-sm: 0;">
+          bash <(curl -sL startr.sh/links)</code>
+
+      <h2 style="--ta:center;"><span style="--c:oklch(85% 0 330);">From zero to live Linktree in minutes.</span>
+      </h2>
+    </main>
+
+    <section style="--d:flex; --fd:column; --ai:center; --jc:center;--w:100%; --g:1em">
+      <p style="--ta:center; --mt:10px; --mb:20px; --maxw:50ch">Our HTML-wrapped scripts create complete project setups with modern tooling and CMS integration.</p>
+
+      <div style="--d:grid; --grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); --g:20px; --w:100%; --maxw:800px; --mt:20px;">
+        <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
+          <h3 style="--size:18px; --weight:bold; --mb:10px;">🔧 Complete Setup</h3>
+          <p style="--size:14px;">11ty static site generator, Netlify CMS admin interface, responsive Linktree layout</p>
+        </div>
+        
+        <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
+          <h3 style="--size:18px; --weight:bold; --mb:10px;">📱 Mobile-First</h3>
+          <p style="--size:14px;">Responsive design, social media icons, copy-to-clipboard functionality</p>
+        </div>
+        
+        <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
+          <h3 style="--size:18px; --weight:bold; --mb:10px;">⚡ CMS Ready</h3>
+          <p style="--size:14px;">Decap CMS (Netlify CMS) configured for easy content management via web interface</p>
+        </div>
+        
+        <div style="--bg:oklch(0.15 0.08 300); --p:20px; --br:10px; --ta:center;">
+          <h3 style="--size:18px; --weight:bold; --mb:10px;">🚀 Deploy Ready</h3>
+          <p style="--size:14px;">Netlify configuration included, ready for instant deployment to production</p>
+        </div>
+      </div>
+
+      <h3 style="--size:28px; --weight:bold; --ta:center; --mt:30px;">Build Your Linktree Now!</h3>
+
+      <div style="--d:flex; --jc:center; --mt:20px; --gap:10px; --flex-wrap:wrap;">
+        <a href="https://github.com/Startr/WEB-DEV-startr.sh"><button
+            style="--p:10px 20px; --bg:oklch(33% 45% 320deg); --radius:5px;">GitHub</button></a>
+        <button
+          style="--d:none;--p:10px 20px; --bg:oklch(0.5 0.3 300); --c:oklch(95% 0 100); --border:none; --radius:5px;">
+          Documentation</button>
+      </div>
+    </section>
+
+    <details style="--mt:1.6em">
+      <summary>What does this script create?</summary>
+      <fun-quote style="--d:flex; --ai:center; --jc:center; --w:80%;--m:auto; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
+        <span>Creates a complete Linktree-style site with 11ty static generation, Decap CMS admin interface, responsive design, and Netlify deployment configuration. Perfect for social media bio links!</span>
+      </fun-quote>
+    </details>
+    
+    <details>
+      <summary>How do I customize it?</summary>
+      <fun-quote style="--d:flex; --ai:center; --jc:center; --w:90%; --m:auto; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
+        <span>After running the script, edit <code>src/_data/links.yml</code> for content or use the CMS admin interface at <code>/admin</code> after deployment. The script shows exactly what it creates in the code section below.</span>
+      </fun-quote>
+    </details>
+    
+    <footer style="--d:flex; --ai:center; --jc:center; --w:100%; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --br: 0.6em;">
+      <p style="--c:oklch(85% 0 50); --m:0;">© 2025 <a style="--c:var(--primary);" href="https://startr.cloud">Startr LLC</a> All rights reserved.</p>
+    </footer>
+    <!--

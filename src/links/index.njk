@@ -1,0 +1,171 @@
+#!/bin/bash -e
+<<html_content #>
+{% include "links/_includes/page.njk" %}
+#{% raw %}
+html_content
+#--><pre style="--h: 20em; --of:scroll; --maxw: 100%; --size:0.4rem; --bg:rgba(255, 255, 255, 0.055); --b:0.2em solid rgba(184, 0, 100, 1); --br:0.6em; --p: 1em; box-shadow: 0 0 10px rgba(184, 0, 100, 0.5); --c:rgba(184, 0, 100, 1)">
+#!/bin/bash
+
+set -e
+
+echo "🚀 Setting up Linktree-style 11ty + Decap CMS project..."
+
+PROJECT_DIR="linktree-site"
+mkdir -p $PROJECT_DIR && cd $PROJECT_DIR
+
+# 1. Init npm & install 11ty
+npm init -y > /dev/null
+npm install --save-dev @11ty/eleventy > /dev/null
+
+# 2. Create folder structure
+mkdir -p src/_data src/links admin static/uploads
+
+# 3. Basic .eleventy.js config
+cat > .eleventy.js <<EOF
+module.exports = function(eleventyConfig) {
+  eleventyConfig.addPassthroughCopy("admin");
+  eleventyConfig.addPassthroughCopy("static");
+  return {
+    dir: {
+      input: "src",
+      output: "_site"
+    }
+  };
+};
+EOF
+
+# 4. Add Netlify CMS config
+cat > admin/config.yml <<'EOF'
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "static/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "links"
+    label: "Link Page Content"
+    files:
+      - file: "src/_data/links.yml"
+        label: "Links"
+        name: "links"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "string" }
+          - { label: "Avatar Image URL", name: "avatar", widget: "string" }
+          - label: "Links"
+            name: "links"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Icon Class", name: "icon", widget: "string", required: false }
+              - { label: "URL", name: "url", widget: "string" }
+EOF
+
+# 5. CMS HTML entry point
+cat > admin/index.html <<'EOF'
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>CMS</title>
+    <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
+  </head>
+  <body></body>
+</html>
+EOF
+
+# 6. Create data file for links
+cat > src/_data/links.yml <<EOF
+title: "Freedom From Poverty Foundation"
+description: "Creating pathways to a brighter future! ✨"
+avatar: "https://example.com/avatar.png"
+
+links:
+  - label: "Instagram"
+    icon: "fa-brands fa-instagram"
+    url: "https://instagram.com/ffpf_org"
+  - label: "Facebook"
+    icon: "fa-brands fa-facebook"
+    url: "https://www.facebook.com/freedomfrompoverty"
+  - label: "YouTube"
+    icon: "fa-brands fa-youtube"
+    url: "https://www.youtube.com/@freedomfrompauvretyfoundat1872"
+  - label: "Get Involved"
+    url: "http://ffpf.org/get-involved/"
+  - label: "Donate"
+    url: "https://www.canadahelps.org/en/charities/la-fondation-de-la-liberation-de-la-pauvrete-inc/"
+  - label: "26th Annual Gala"
+    url: "https://forms.gle/xNEruCi56F2KcKPy6"
+  - label: "Make a Difference"
+    url: "https://forms.gle/tDrLEURdR6ggbaoa6"
+EOF
+
+# 7. Create base layout
+mkdir -p src/_includes/layouts
+cat > src/_includes/layouts/base.njk <<'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2rem; }
+    img { border-radius: 50%; width: 100px; }
+    .link { display: block; margin: 1rem auto; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  {{ content | safe }}
+</body>
+</html>
+EOF
+
+# 8. Create linktree page template
+cat > src/links/index.njk <<'EOF'
+---
+layout: layouts/base.njk
+title: {{ links.title }}
+---
+
+{% if links.avatar %}
+  <img src="{{ links.avatar }}" alt="avatar">
+{% endif %}
+
+<h2>{{ links.title }}</h2>
+<p>{{ links.description }}</p>
+
+{% for link in links.links %}
+  <a href="{{ link.url }}" class="link">
+    {% if link.icon %}
+      <i class="{{ link.icon }}"></i>
+    {% endif %}
+    {{ link.label }}
+  </a>
+{% endfor %}
+EOF
+
+# 9. Add netlify.toml (optional)
+cat > netlify.toml <<'EOF'
+[build]
+  publish = "_site"
+  command = "npx eleventy"
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+EOF
+
+echo "✅ Project ready. To start 11ty:"
+echo ""
+echo "   cd $PROJECT_DIR"
+echo "   npx eleventy --serve"
+echo ""
+
+#
+# That's all folks {% endraw %}
+#</pre></body></html>
