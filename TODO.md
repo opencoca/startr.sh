@@ -1,6 +1,54 @@
 # TODO - Startr.sh Development Tasks
 
+## Project Philosophy & Vision
+
+### **The Startr Enlightenment**
+This project embodies a philosophy of **Radical Simplification** in software development - the belief that the most powerful tools are those that eliminate complexity rather than add it.
+
+**Core Tenets:**
+1. **Immediate Value**: Every tool should provide instant, tangible benefit (`curl | bash` and you're productive)
+2. **Transparency by Design**: No black boxes - every script is human-readable and self-documenting
+3. **Battle-Tested Over Bleeding-Edge**: We prefer proven patterns over innovative complexity
+4. **Standards as Code**: Development conventions should be as versionable and deployable as the code itself
+5. **Enlightenment Through Convention**: True freedom comes from agreed-upon constraints that eliminate decision fatigue
+
+**The CEP Vision:**
+Common Enlightenment Protocol represents our belief that development teams spend too much time reinventing basic project conventions. CEP asks: "What if following best practices was as easy as running a single command?"
+
+**Philosophical Opposition:**
+- Against "Configuration Hell" - endless setup before productivity
+- Against "Framework Lock-in" - tools should enhance, not control
+- Against "Documentation Rot" - living documentation that stays current with practice
+- Against "Tribal Knowledge" - conventions should be explicit and transferable
+
+### **[PHILOSOPHY IMPLEMENTATION] Living Philosophy Documentation**
+- [ ] **Create Philosophy Documentation**: Articulate and formalize project beliefs
+  - [ ] Create `docs/philosophy/` directory for philosophical documentation
+  - [ ] Document "Radical Simplification" principles with examples
+  - [ ] Create manifesto explaining anti-patterns we actively oppose
+  - [ ] Document decision-making framework based on core tenets
+  - [ ] Add philosophy section to main README.md
+  - [ ] Create examples showing philosophy in practice
+  - [ ] Link philosophy to technical decisions in codebase
+
+- [ ] **Philosophy-Driven Development Guidelines**: Ensure all code follows philosophy
+  - [ ] Create code review checklist based on core tenets
+  - [ ] Document how to evaluate new features against philosophy
+  - [ ] Create rejection criteria for complexity-adding proposals
+  - [ ] Add philosophy validation to automated testing
+  - [ ] Document how to explain philosophy to new contributors
+  - [ ] Create philosophy-based troubleshooting guides
+
 ## Documentation & Resource Sharing TODOs
+
+### **[DOCUMENTATION] SEO and Site Structure Optimization**
+- [x] **Reorganize Marketing Documentation**: Move content to appropriate src docs structure
+  - [x] Create `src/docs/` directory for site documentation
+  - [x] Rename `docs/why.md` to SEO-friendly name (`startr-benefits-for-development-teams.md`)
+  - [ ] Move marketing content from repo docs to src docs
+  - [ ] Update navigation and internal links
+  - [ ] Verify SEO optimization of new structure
+  - [ ] Test that content is properly served by site
 
 ### **[CEP] Common Enlightenment Protocol Implementation**
 - [x] **Create CEP Directory Structure**: Set up Common Enlightenment Protocol folder
@@ -14,42 +62,39 @@
   - [x] Add hook installation targets (`install_hooks`, `uninstall_hooks`)
   - [x] Test automated hard link restoration after git operations
 
-- [ ] **Create CEP Index Script/Page**: Dual-purpose deployment and explanation
-  - [ ] Design `src/cep/index.njk` following `src/index.njk` pattern
-  - [ ] Create CEP deployment script functionality (bash section)
-  - [ ] Create CEP explanation page (HTML section)
-  - [ ] Follow `_includes/home_page.njk` structure for page layout
-  - [ ] Implement script that deploys CEP files to target projects
-  - [ ] Add interactive options for CEP deployment
-  - [ ] Test both script and page functionality
+- [x] **Create CEP Index Script/Page**: Dual-purpose deployment and explanation
+  - [x] Design `src/cep/index.njk` following `src/index.njk` pattern
+  - [x] Create CEP deployment script functionality (bash section)
+  - [x] Create CEP explanation page (HTML section)
+  - [x] Follow `_includes/home_page.njk` structure for page layout
+  - [x] Implement script that deploys CEP files to target projects
+  - [x] Add interactive options for CEP deployment
+  - [x] Test both script and page functionality
 
-- [ ] **Create CEP Page Template**: Following established patterns
-  - [ ] Create `src/cep/_includes/cep_page.njk` template
-  - [ ] Design CEP branding and visual identity
-  - [ ] Add explanation of Common Enlightenment Protocol concepts
-  - [ ] Include usage examples and best practices
-  - [ ] Add download/deployment instructions
-  - [ ] Create responsive design following site standards
-  - [ ] Test page rendering and functionality
+- [x] **Create CEP Page Template**: Following established patterns
+  - [x] Create `src/cep/_includes/cep_page.njk` template
+  - [x] Design CEP branding and visual identity
+  - [x] Add explanation of Common Enlightenment Protocol concepts
+  - [x] Include usage examples and best practices
+  - [x] Add download/deployment instructions
+  - [x] Create responsive design following site standards
+  - [x] Test page rendering and functionality
 
-- [ ] **CEP Deployment Logic**: Script functionality for project setup
-  - [ ] Implement file detection and project analysis
-  - [ ] Add CEP file deployment to target directories
-  - [ ] Create backup mechanism for existing files
-  - [ ] Add conflict resolution for existing conventions
-  - [ ] Implement verification and validation checks
-  - [ ] Add rollback functionality for failed deployments
-  - [ ] Test deployment across different project types
-  - [ ] Create deployment logging and reporting
+- [x] **CEP Deployment Logic**: Simple protocol deployment (following Radical Simplification)
+  - [x] Deploy CEP files (CONVENTION.instructions.md and DEVELOPMENT_WORKFLOW.md)
+  - [x] Basic conflict detection and user confirmation
+  - [x] Simple, human-readable script that does one thing well
+  - [x] Keep CEP focused on protocol deployment, not project setup
+  - [x] Project setup complexity handled by startr.sh proper, not CEP
 
-- [ ] **Research Eleventy Includes Optimization**: Improve CEP self-containment
-  - [ ] Research 11ty documentation for local includes configuration
-  - [ ] Investigate options to keep CEP includes within `src/cep/` folder
-  - [ ] Test alternative include paths and configurations
-  - [ ] Evaluate benefits of self-contained vs shared includes approach
-  - [ ] Implement optimized include structure if beneficial
-  - [ ] Update CEP template structure based on findings
-  - [ ] Document best practices for future reference
+- [x] **Research Eleventy Includes Optimization**: CEP self-containment working as designed
+  - [x] Research 11ty documentation for local includes configuration
+  - [x] Investigate options to keep CEP includes within `src/cep/` folder
+  - [x] Test alternative include paths and configurations
+  - [x] Evaluate benefits of self-contained vs shared includes approach
+  - [x] Current approach optimal: shared components (head, header) + CEP-specific content
+  - [x] Build verification successful - all pages render correctly
+  - [x] Document best practices: standardize on shared components, self-contain page content
 
 ### **[DOCUMENTATION] Standardized Makefile Documentation**
 - [x] **Create docs/ directory structure**: Set up comprehensive documentation folder
@@ -80,8 +125,10 @@
 
 ### **[RESOURCE SHARING] Enhanced Startr.sh Resource Distribution**
 - [ ] **Create Resource Download System**: Help users get standard files
-  - [ ] Design resource endpoint structure (`/resources/makefile`, `/resources/dockerfile`, etc.)
+  - [ ] We will symlink our actual resources to the `/resources/` directory at times they will be in subdirectories and or have seo-friendly names
+  - [ ] Research and implement symlink strategy for resources
   - [ ] Create `src/resources/` directory for downloadable resources
+  
   - [ ] Add standardized Makefile to downloadable resources
   - [ ] Add standardized Dockerfile templates to resources
   - [ ] Add standardized .gitignore templates to resources
@@ -129,6 +176,25 @@
   - [ ] Test interactive examples across browsers
   - [ ] Add analytics for most-used examples
 
+## 🔥 This Week (August 27, 2025)
+### 🔥 [WEB INTERFACE]: DRY Improvements for Page Templates
+- [ ] **DRY Details/Summary Components**: Extract repetitive detail/summary pairs into reusable data
+  - [ ] Create front matter data structure for FAQ-style content
+  - [ ] Extract detail/summary pairs from links page into data
+  - [ ] Create reusable macro/include for FAQ rendering
+  - [ ] Apply DRY principle to remove code duplication
+  - [ ] Test FAQ rendering and functionality
+  - [ ] Apply same pattern to other pages with similar content
+
+### 🔥 [WEB INTERFACE]: Update Links Page Content
+- [x] **Update Links Page for Linktree Script**: Change content from CEP to Linktree-style 11ty + Decap CMS
+  - [x] Update main heading and description for Linktree focus
+  - [x] Update feature cards to reflect Linktree functionality  
+  - [x] Update call-to-action and deployment information
+  - [x] Update demo command to reflect Linktree script
+  - [x] Test page rendering and functionality
+  - [x] Verify links and references work correctly
+
 ### **[TESTING & VALIDATION] Quality Assurance**
 - [ ] **Test Resource Distribution**: Ensure everything works
   - [ ] Test Makefile download and functionality
@@ -152,22 +218,22 @@
 
 ## Implementation Priority
 
-**Phase 0: CEP Foundation (Current Sprint)**
-- Create CEP directory structure with hard links
-- Design and implement CEP index.njk (script + page)
-- Create CEP page template following established patterns
-- Implement basic CEP deployment functionality
+**Phase 0: CEP Foundation (Current Sprint)** ✅ **COMPLETE**
+- ✅ Create CEP directory structure with hard links
+- ✅ Design and implement CEP index.njk (script + page)
+- ✅ Create CEP page template following established patterns
+- ✅ Implement simple CEP deployment functionality
 
-**Phase 1: Foundation (Week 1)**
-- Create docs/ directory structure
-- Create basic Makefile documentation
-- Create DEVELOPMENT_WORKFLOW.md
+**Phase 1: Foundation (Week 1)** ✅ **COMPLETE**
+- ✅ Create docs/ directory structure
+- ✅ Create basic Makefile documentation
+- ✅ Create DEVELOPMENT_WORKFLOW.md
 
-**Phase 2: Resource System (Week 2)**
+**Phase 2: Resource System (Week 2)** 📋 **CURRENT FOCUS**
 - Create resource download system
 - Enhance startr.sh script with download flags
 - Create standardized templates
-- Complete CEP deployment logic and testing
+- Research Eleventy includes optimization for CEP
 
 **Phase 3: Web Integration (Week 3)**
 - Integrate documentation into website

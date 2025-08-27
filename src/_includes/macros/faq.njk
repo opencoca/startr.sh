@@ -1,0 +1,16 @@
+{# Reusable FAQ macro following DRY principles #}
+{% macro renderFaq(question, answer, width = "80%") %}
+<details style="--mt:1.6em">
+  <summary>{{ question }}</summary>
+  <fun-quote style="--d:flex; --ai:center; --jc:center; --w:{{ width }};--m:auto; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
+    <span>{{ answer | safe }}</span>
+  </fun-quote>
+</details>
+{% endmacro %}
+
+{# Render all FAQs from data #}
+{% macro renderAllFaqs(faqData) %}
+  {% for faq in faqData.faqs %}
+    {{ renderFaq(faq.question, faq.answer, faq.width) }}
+  {% endfor %}
+{% endmacro %}

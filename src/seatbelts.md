@@ -5,12 +5,14 @@ title: Startr.sh Seatbelts
 
 {style="--ta:center; zoom:1.4; --pt:2rem; --pt-sm:0"}
 
-# Seatbelts, a security auditor for macOS. {style="--size:2rem"}
+# Seatbelts, a security auditor for macOS and Linux {style="--size:2rem"}
 
 ![Seatbelts](/assets/SEATBELTS_Logo.jpg) {style="--br:2rem"}
 
+## Buckle up for security! Be safe!{style="--size:1.2rem;"}
+
 Seatbelts - System Overview
-Seatbelts is a "low touch" security auditor for macOS that runs as a Bats test suite. 
+Seatbelts is a "low touch" security auditor for macOS and Linux that runs as a Bats test suite.
 
 {style="--ta:left"}
 

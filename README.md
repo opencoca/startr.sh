@@ -1,16 +1,17 @@
-# startr.sh v0.2.1
+# startr.sh v0.2.2
 
-## Now with the power of the CEP (Common Enlightenment Protocol or the Conventional Environment Protocol)!
+## Now with the power of the CEP (Common Enlightenment Protocol or the Conventional Environment Protocol) and the beginnings of Seatbelts!
 
-> The ultimate launchpad for your development projects following industry best practices.
+> The ultimate launchpad for your development projects, following industry best practices.
 
 Startr.sh - is the ultimate launchpad for your development projects! With a simple terminal command, `bash <(curl -sL startr.sh)`, you can set up your project environment in no time. Streamline your Docker image creation process and say goodbye to tedious setup and configuration.
 
-Startr.sh is designed to enhance your development workflow, regardless of the framework you use. It supports popular languages and frameworks such as Python, Django, Flask, Node, and Startr.Style CSS, ensuring a seamless and efficient experience.
+Startr.sh is designed to enhance your development workflow, regardless of the framework you use. It supports popular languages and frameworks such as Python, Django, Flask, Node, and Startr.Style CSS to ensure a seamless and efficient experience.
 
-The service is backed by experienced developers who've mastered the art of project deployment. They provide the tools and insights needed to launch your projects reliably and quickly, saving you precious time and effort.
+The service is backed by experienced developers who’ve mastered the art of project deployment. They provide the tools and insights needed to launch your projects reliably and quickly, saving you precious time and effort.
 
 Make your development process effortless and focus on what matters most - your code. Get started with Startr.sh today and experience the convenience of one-command project setup!
+
 
 ## Quick Start
 

@@ -1,0 +1,14 @@
+{
+  "faqs": [
+    {
+      "question": "What does this script create?",
+      "answer": "Creates a complete Linktree-style site with 11ty static generation, Decap CMS admin interface, responsive design, and Netlify deployment configuration. Perfect for social media bio links!",
+      "width": "80%"
+    },
+    {
+      "question": "How do I customize it?",
+      "answer": "After running the script, edit <code>src/_data/links.yml</code> for content or use the CMS admin interface at <code>/admin</code> after deployment. The script shows exactly what it creates in the code section below.",
+      "width": "90%"
+    }
+  ]
+}
