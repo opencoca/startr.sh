@@ -1,3 +1,6 @@
+{# Import FAQ macro for DRY rendering #}
+{% from "macros/faq.njk" import renderAllFaqs %}
+
 <!DOCTYPE html>
 <html lang="en"
 style="background: rgb(36, 0, 2);
@@ -83,19 +86,8 @@ style="background: rgb(36, 0, 2);
       </div>
     </section>
 
-    <details style="--mt:1.6em">
-      <summary>What does this script create?</summary>
-      <fun-quote style="--d:flex; --ai:center; --jc:center; --w:80%;--m:auto; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
-        <span>Creates a complete Linktree-style site with 11ty static generation, Decap CMS admin interface, responsive design, and Netlify deployment configuration. Perfect for social media bio links!</span>
-      </fun-quote>
-    </details>
-    
-    <details>
-      <summary>How do I customize it?</summary>
-      <fun-quote style="--d:flex; --ai:center; --jc:center; --w:90%; --m:auto; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --mb:20px; --br: 0.6em; --ta:center;">
-        <span>After running the script, edit <code>src/_data/links.yml</code> for content or use the CMS admin interface at <code>/admin</code> after deployment. The script shows exactly what it creates in the code section below.</span>
-      </fun-quote>
-    </details>
+    {# DRY FAQ rendering using data and macro #}
+    {{ renderAllFaqs(linksFaq) }}
     
     <footer style="--d:flex; --ai:center; --jc:center; --w:100%; --p:20px; --bg:oklch(0.15 0.08 300); --mt:20px; --br: 0.6em;">
       <p style="--c:oklch(85% 0 50); --m:0;">© 2025 <a style="--c:var(--primary);" href="https://startr.cloud">Startr LLC</a> All rights reserved.</p>
