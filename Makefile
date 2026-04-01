@@ -247,3 +247,9 @@ uninstall_hooks:
 		fi; \
 	done
 	@echo "🎉 All project hooks uninstalled!"
+
+# ---------------------------------------------------------------------------
+# Interactive release (full flow via ~/bin/git-release)
+# ---------------------------------------------------------------------------
+release:
+	@scripts/release.sh
