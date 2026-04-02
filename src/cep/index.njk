@@ -33,6 +33,7 @@ about_cep="
 CEP deploys battle-tested development standards to your project, including:
 - CONVENTION.instructions.md (SOLID, YAGNI, KISS, DRY)
 - DEVELOPMENT_WORKFLOW.md (Plan-Document-Execute-Verify)
+- scripts/release.sh (interactive git-flow release workflow)
 
 This ensures your project follows proven conventions and workflows from day one.
 "
@@ -78,10 +79,13 @@ deploy_cep_files() {
     # Define file URLs and target paths
     CONVENTION_URL="https://startr.sh/cep/CONVENTION.instructions.md"
     WORKFLOW_URL="https://startr.sh/cep/DEVELOPMENT_WORKFLOW.md"
+    RELEASE_URL="https://startr.sh/scripts/release.sh"
     # Define target paths
     TARGET_CONVENTION="./CONVENTION.instructions.md"
     TARGET_DOCS_DIR="./docs"
     TARGET_WORKFLOW="${TARGET_DOCS_DIR}/DEVELOPMENT_WORKFLOW.md"
+    TARGET_SCRIPTS_DIR="./scripts"
+    TARGET_RELEASE="${TARGET_SCRIPTS_DIR}/release.sh"
 
     # Check for existing files and ask for confirmation
     if [ -f "$TARGET_CONVENTION" ] || [ -f "$TARGET_WORKFLOW" ]; then
@@ -113,6 +117,19 @@ deploy_cep_files() {
         echo -e "${GREEN}${SUCCESS_EMOJI} Deployed DEVELOPMENT_WORKFLOW.md to docs/${NC}"
     else
         echo -e "${RED}${ERROR_EMOJI} Failed to download DEVELOPMENT_WORKFLOW.md${NC}"
+        exit 1
+    fi
+
+    # Create scripts directory if it doesn't exist
+    if [ ! -d "$TARGET_SCRIPTS_DIR" ]; then
+        mkdir -p "$TARGET_SCRIPTS_DIR"
+    fi
+
+    echo -e "${BLUE}Downloading release.sh...${NC}"
+    if curl -sL "$RELEASE_URL" -o "$TARGET_RELEASE" && chmod +x "$TARGET_RELEASE"; then
+        echo -e "${GREEN}${SUCCESS_EMOJI} Deployed scripts/release.sh (interactive git-flow workflow)${NC}"
+    else
+        echo -e "${RED}${ERROR_EMOJI} Failed to download release.sh${NC}"
         exit 1
     fi
 }
