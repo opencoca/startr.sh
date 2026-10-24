@@ -1,4 +1,4 @@
-# startr.sh v0.2.2
+# startr.sh v0.3.0
 
 ## Now with the power of the CEP (Common Enlightenment Protocol or the Conventional Environment Protocol) and the beginnings of Seatbelts!
 
