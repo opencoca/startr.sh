@@ -6,7 +6,7 @@ html_content
 #--><pre style="--h: 20em; --of:scroll; --maxw: 100%; --size:0.4rem; --bg:rgba(255, 255, 255, 0.055); --b:0.2em solid rgba(184, 0, 100, 1); --br:0.6em; --p: 1em; box-shadow: 0 0 10px rgba(184, 0, 100, 0.5); --c:rgba(184, 0, 100, 1)">
 #!/bin/bash
 #
-# Version 1.0.0
+# Version 1.1.0
 #
 # Copyright (c) Startr LLC. All rights reserved.
 # This script is licensed under the GNU Affero General Public License v3.0.
@@ -15,8 +15,11 @@ html_content
 # Common Enlightenment Protocol (CEP) Deployment Script
 # This script deploys development standards to the current project.
 #
-# `curl startr.sh/cep|bash` to run this script
+# `bash <(curl -fsSL startr.sh/cep)` or `curl -fsSL startr.sh/cep | bash`
 #
+
+STARTR_URL="${STARTR_URL:-https://startr.sh}"
+MAKEFILE_MARKER='## >>> startr release block v2'
 
 # --- ASCII Art & Introduction ---
 
@@ -33,7 +36,8 @@ about_cep="
 CEP deploys battle-tested development standards to your project, including:
 - CONVENTION.instructions.md (SOLID, YAGNI, KISS, DRY)
 - DEVELOPMENT_WORKFLOW.md (Plan-Document-Execute-Verify)
-- scripts/release.sh (interactive git-flow release workflow)
+- The Startr standard Makefile with its release flow (offered; an existing Makefile is never touched)
+- An offer to set up git-flow-next, git-release and a container runtime (it asks before each install)
 
 This ensures your project follows proven conventions and workflows from day one.
 "
@@ -53,16 +57,43 @@ ERROR_EMOJI='❌'
 echo -e "${BLUE}${cep_art}${NC}"
 echo -e "${YELLOW}${about_cep}${NC}"
 
+# --- Helpers ---
+
+# ask QUESTION DEFAULT: `curl | bash` feeds this script on stdin, so answers come
+# from the terminal. Without one, or with STARTR_NONINTERACTIVE=1, DEFAULT stands.
+ask() {
+    local answer=""
+    if [ "${STARTR_NONINTERACTIVE:-0}" != 1 ] && { : < /dev/tty; } 2>/dev/null; then
+        printf '%b ' "$1" >/dev/tty
+        read -r answer < /dev/tty || answer=""
+    fi
+    case "${answer:-$2}" in y|Y|yes|Yes) return 0 ;; *) return 1 ;; esac
+}
+
+# fetch URL TARGET [MUST_CONTAIN]: keep the download only if it arrived whole,
+# is not the startr.sh home page (what a wrong address can return), and holds
+# MUST_CONTAIN when given.
+fetch() {
+    local tmp
+    tmp="$(mktemp)"
+    if curl -fsSL "$1" -o "$tmp" && ! grep -qF 'html_content #>' "$tmp" \
+        && { [ -z "${3:-}" ] || grep -qF -- "$3" "$tmp"; }; then
+        cat "$tmp" > "$2"
+        rm -f "$tmp"
+        return 0
+    fi
+    rm -f "$tmp"
+    return 1
+}
+
 # --- Main Logic ---
 
 # Function to check if in a git repository
 check_git_repo() {
     if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         echo -e "${RED}${ERROR_EMOJI} You are not in a git repository.${NC}"
-        echo -e "${YELLOW}CEP should be run in the root of a git project."
-        echo -e "${BLUE}Would you like to initialize a new git repository here? (y/n):${NC}"
-        read -r INIT_REPO
-        if [ "$INIT_REPO" == "y" ]; then
+        echo -e "${YELLOW}CEP should be run in the root of a git project.${NC}"
+        if ask "${BLUE}Would you like to initialize a new git repository here? (y/N):${NC}" n; then
             git init
             echo -e "${GREEN}${SUCCESS_EMOJI} New git repository initialized.${NC}"
         else
@@ -76,36 +107,23 @@ check_git_repo() {
 deploy_cep_files() {
     echo -e "${BLUE}${SETUP_EMOJI} Deploying CEP files...${NC}"
 
-    # Define file URLs and target paths
-    CONVENTION_URL="https://startr.sh/cep/CONVENTION.instructions.md"
-    WORKFLOW_URL="https://startr.sh/cep/DEVELOPMENT_WORKFLOW.md"
-    RELEASE_URL="https://startr.sh/scripts/release.sh"
-    # Define target paths
-    TARGET_CONVENTION="./CONVENTION.instructions.md"
-    TARGET_DOCS_DIR="./docs"
-    TARGET_WORKFLOW="${TARGET_DOCS_DIR}/DEVELOPMENT_WORKFLOW.md"
-    TARGET_SCRIPTS_DIR="./scripts"
-    TARGET_RELEASE="${TARGET_SCRIPTS_DIR}/release.sh"
+    local convention_url="$STARTR_URL/cep/CONVENTION.instructions.md"
+    local workflow_url="$STARTR_URL/cep/DEVELOPMENT_WORKFLOW.md"
+    local target_convention="./CONVENTION.instructions.md"
+    local target_workflow="./docs/DEVELOPMENT_WORKFLOW.md"
 
-    # Check for existing files and ask for confirmation
-    if [ -f "$TARGET_CONVENTION" ] || [ -f "$TARGET_WORKFLOW" ]; then
-        echo -e "${YELLOW}CEP files already exist. Overwriting will replace existing conventions."
-        echo -e "${BLUE}Do you want to overwrite them? (y/n):${NC}"
-        read -r OVERWRITE
-        if [ "$OVERWRITE" != "y" ]; then
-            echo -e "${RED}Aborted. No files were changed.${NC}"
-            exit 1
+    if [ -f "$target_convention" ] || [ -f "$target_workflow" ]; then
+        echo -e "${YELLOW}CEP files already exist. Overwriting will replace existing conventions.${NC}"
+        if ! ask "${BLUE}Do you want to overwrite them? (y/N):${NC}" n; then
+            echo -e "${YELLOW}Keeping your existing CEP files.${NC}"
+            return 0
         fi
     fi
 
-    # Create docs directory if it doesn't exist
-    if [ ! -d "$TARGET_DOCS_DIR" ]; then
-        mkdir -p "$TARGET_DOCS_DIR"
-    fi
+    mkdir -p ./docs
 
-    # Download and deploy files
     echo -e "${BLUE}Downloading CONVENTION.instructions.md...${NC}"
-    if curl -sL "$CONVENTION_URL" -o "$TARGET_CONVENTION"; then
+    if fetch "$convention_url" "$target_convention"; then
         echo -e "${GREEN}${SUCCESS_EMOJI} Deployed CONVENTION.instructions.md${NC}"
     else
         echo -e "${RED}${ERROR_EMOJI} Failed to download CONVENTION.instructions.md${NC}"
@@ -113,35 +131,59 @@ deploy_cep_files() {
     fi
 
     echo -e "${BLUE}Downloading DEVELOPMENT_WORKFLOW.md...${NC}"
-    if curl -sL "$WORKFLOW_URL" -o "$TARGET_WORKFLOW"; then
+    if fetch "$workflow_url" "$target_workflow"; then
         echo -e "${GREEN}${SUCCESS_EMOJI} Deployed DEVELOPMENT_WORKFLOW.md to docs/${NC}"
     else
         echo -e "${RED}${ERROR_EMOJI} Failed to download DEVELOPMENT_WORKFLOW.md${NC}"
         exit 1
     fi
+}
 
-    # Create scripts directory if it doesn't exist
-    if [ ! -d "$TARGET_SCRIPTS_DIR" ]; then
-        mkdir -p "$TARGET_SCRIPTS_DIR"
+# Offer the standard Makefile. An existing Makefile is never touched.
+offer_makefile() {
+    if [ -f Makefile ]; then
+        echo -e "${YELLOW}A Makefile is already here, and CEP leaves it alone.${NC}"
+        echo -e "${YELLOW}To take the release flow, copy the block between the 'startr release block v2' markers in ${STARTR_URL}/Makefile${NC}"
+        echo -e "${YELLOW}Guide: ${STARTR_URL}/docs/makefile-git-flow/${NC}"
+        return 0
     fi
+    if ask "${BLUE}Fetch the Startr standard Makefile? (Y/n):${NC}" y; then
+        if fetch "$STARTR_URL/Makefile" Makefile "$MAKEFILE_MARKER"; then
+            echo -e "${GREEN}${SUCCESS_EMOJI} Added the Startr standard Makefile. Container project? Add the block from ${STARTR_URL}/Makefile.docker${NC}"
+        else
+            echo -e "${RED}${ERROR_EMOJI} ${STARTR_URL}/Makefile did not return the standard Makefile. Nothing was written.${NC}"
+            return 1
+        fi
+    fi
+}
 
-    echo -e "${BLUE}Downloading release.sh...${NC}"
-    if curl -sL "$RELEASE_URL" -o "$TARGET_RELEASE" && chmod +x "$TARGET_RELEASE"; then
-        echo -e "${GREEN}${SUCCESS_EMOJI} Deployed scripts/release.sh (interactive git-flow workflow)${NC}"
+# Offer the tools: Homebrew, git-flow-next, git-release, a container runtime.
+offer_tools() {
+    local tmp
+    tmp="$(mktemp)"
+    if fetch "$STARTR_URL/scripts/tools.sh" "$tmp" 'tools.sh: offers'; then
+        bash "$tmp" git-release runtime || echo -e "${YELLOW}Some tools are not set up yet. The lines above say how.${NC}"
     else
-        echo -e "${RED}${ERROR_EMOJI} Failed to download release.sh${NC}"
-        exit 1
+        echo -e "${YELLOW}Could not fetch ${STARTR_URL}/scripts/tools.sh, so the tools offer is skipped.${NC}"
     fi
+    rm -f "$tmp"
 }
 
 # --- Execution ---
 
+status=0
 check_git_repo
 deploy_cep_files
+offer_makefile || status=1
+offer_tools
 
-echo -e "\n${GREEN}${SUCCESS_EMOJI} CEP deployment complete!${NC}"
-echo -e "${YELLOW}Your project is now set up with proven development standards.${NC}"
-
+if [ "$status" = 0 ]; then
+    echo -e "\n${GREEN}${SUCCESS_EMOJI} CEP deployment complete!${NC}"
+    echo -e "${YELLOW}Your project is now set up with proven development standards.${NC}"
+else
+    echo -e "\n${RED}${ERROR_EMOJI} CEP finished with a problem; see above.${NC}"
+fi
+exit "$status"
 #
 # That's all folks {% endraw %}
 #</pre></body></html>
