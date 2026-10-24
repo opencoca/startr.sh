@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Git pre-push hook for startr.sh: nothing is pushed until the local tests pass.
+#
+# Installation: make install_hooks
+#
+# `make test` runs in about 20 seconds, in a temp folder, against a fixture
+# site on 127.0.0.1. It never uses the network and never touches a real repo.
+# To push anyway in an emergency: git push --no-verify (and say why).
+
+echo "🧪 pre-push: make test"
+if ! make -s test; then
+    echo "❌ Local tests failed: nothing was pushed. Fix them, or see tests/run.sh."
+    exit 1
+fi

@@ -1,0 +1,171 @@
+## =============================================================================
+## Makefile.base — Startr Standard Makefile Core
+## =============================================================================
+## Required foundation for every Startr project.
+## Copy this block verbatim into your project's Makefile.
+## Do not rename variables — other projects and tooling depend on these names.
+##
+## Extended by: templates/Makefile.docker  (containerised projects)
+## Source of truth: WEB-Startr.sh/templates/Makefile.base
+## Documentation:   WEB-Startr.sh/docs/makefile/
+## =============================================================================
+
+## --- Standard .env loading ---
+## Must use -include (silent, non-fatal). Never use ifneq/include/export.
+-include .env
+
+## --- Standard variable block (copy verbatim, do not alter names) ---
+PROJECTPATH := $(shell git rev-parse --show-toplevel)
+PROJECT := $(shell echo $$(basename $(PROJECTPATH)) | tr '[:upper:]' '[:lower:]')
+FULL_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+BRANCH := $(shell echo $(FULL_BRANCH) | sed 's/.*\///' | tr '[:upper:]' '[:lower:]')
+TAG := $(shell git describe --always --tag)
+REMOTE_URL := $(shell git config --get remote.origin.url 2>/dev/null || echo "unknown/unknown")
+OWNER := $(shell echo $(REMOTE_URL) | sed -E 's|.*[:/]([^/]+)/[^/]+(.git)?$$|\1|')
+PROJECT_NAME := $(shell echo $(REMOTE_URL) | sed -E 's|.*[:/][^/]+/([^/]+)(.git)?$$|\1|' | sed 's/\.git$$//')
+CONTAINER := $(PROJECT)-$(BRANCH)
+
+## --- Project-specific additions go AFTER this block ---
+## Example: PORT_MAPPING ?= 8080:8080
+## Example: SECRET_KEY   ?= changeme
+## See templates/Makefile.docker for the container project extension.
+
+.PHONY: help show_vars setup \
+        it_run it_build it_build_n_run \
+        install_hooks uninstall_hooks \
+        things_clean \
+        deploy \
+        require_gitflow_next \
+        patch_release minor_release major_release \
+        hotfix release_finish hotfix_finish \
+        release
+
+## --- help: REQUIRED default target ---
+## Dynamic listing — do not replace with a static list.
+help:
+	@echo "================================================"
+	@echo "       $(OWNER)/$(PROJECT_NAME) by Startr.Cloud"
+	@echo "================================================"
+	@echo ""
+	@echo "Available make commands:"
+	@echo ""
+	@LC_ALL=C $(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null \
+		| awk -v RS= -F: '/(^|\n)# Files(\n|$$)/,/(^|\n)# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' \
+		| sort | grep -E -v -e '^[^[:alnum:]]' -e '^$$@$$'
+	@echo ""
+
+## --- show_vars: REQUIRED ---
+show_vars:
+	@echo "=== Standard Variables (Makefile.base) ==="
+	@echo "PROJECTPATH=$(PROJECTPATH)"
+	@echo "PROJECT=$(PROJECT)"
+	@echo "OWNER=$(OWNER)"
+	@echo "PROJECT_NAME=$(PROJECT_NAME)"
+	@echo "FULL_BRANCH=$(FULL_BRANCH)"
+	@echo "BRANCH=$(BRANCH)"
+	@echo "TAG=$(TAG)"
+	@echo "CONTAINER=$(CONTAINER)"
+	@echo "REMOTE_URL=$(REMOTE_URL)"
+	@echo ""
+
+## --- it_run / it_build / it_build_n_run: REQUIRED ---
+## For non-containerised projects use the startr.sh forms below.
+## Containerised projects MUST override these — see templates/Makefile.docker.
+it_run:
+	@bash -c 'bash <(curl -sL startr.sh) run'
+
+it_build:
+	@bash -c 'bash <(curl -sL startr.sh) build'
+
+it_build_n_run:
+	@bash -c 'bash <(curl -sL startr.sh) build && bash <(curl -sL startr.sh) run'
+
+## --- setup: REQUIRED ---
+## Creates .env with project-appropriate defaults if missing.
+## Customise the printf lines for this project's actual variables.
+setup:
+	@echo "Setting up local development environment..."
+	@if [ ! -f .env ]; then \
+		echo "# Project environment — customise as needed" > .env; \
+		echo ".env created. Edit it to configure your environment."; \
+	else \
+		echo ".env already exists — skipping."; \
+	fi
+
+## --- install_hooks / uninstall_hooks: REQUIRED ---
+## Copies everything in scripts/hooks/ into .git/hooks/ and makes it executable.
+install_hooks:
+	@if [ ! -d scripts/hooks ]; then echo "ERROR: scripts/hooks not found"; exit 1; fi
+	@for hook in scripts/hooks/*; do \
+		if [ -f "$$hook" ]; then \
+			hook_name=$$(basename "$$hook"); \
+			cp "$$hook" ".git/hooks/$$hook_name" && chmod +x ".git/hooks/$$hook_name"; \
+			echo "Installed: $$hook_name"; \
+		fi; \
+	done
+
+uninstall_hooks:
+	@for hook in scripts/hooks/*; do \
+		if [ -f "$$hook" ]; then \
+			hook_name=$$(basename "$$hook"); \
+			rm -f ".git/hooks/$$hook_name" && echo "Removed: $$hook_name"; \
+		fi; \
+	done
+
+## --- things_clean: REQUIRED ---
+things_clean:
+	git clean --exclude=!.env -Xdf
+
+## --- deploy: REQUIRED ---
+## CapRover deploy with login guard and submodule tar support.
+HAS_SUBMODULE      := $(shell [ -f .gitmodules ] && echo 1)
+HAS_CAPROVER       := $(shell which caprover 2>/dev/null && echo 1)
+HAS_CAPROVER_LOGIN := $(shell caprover ls 2>/dev/null | grep -q "Logged in" && echo 1)
+DEPLOY_FLAGS       ?=
+
+deploy:
+	@if [ "$(HAS_CAPROVER)" = "" ]; then \
+		echo "CapRover CLI not installed. Run: npm install -g caprover"; \
+		exit 1; \
+	elif [ "$(HAS_CAPROVER_LOGIN)" = "" ]; then \
+		echo "Not logged in to CapRover. Run: caprover login"; \
+		exit 1; \
+	fi
+	@if [ "$(HAS_SUBMODULE)" = "1" ]; then \
+		git ls-files --recurse-submodules | tar -czf deploy.tar -T -; \
+		npx caprover deploy -t ./deploy.tar $(DEPLOY_FLAGS); \
+		rm ./deploy.tar; \
+	else \
+		npx caprover deploy $(DEPLOY_FLAGS); \
+	fi
+
+## --- Git Flow targets: REQUIRED ---
+## All require git-flow-next (brew install git-flow-next), NOT legacy git-flow.
+require_gitflow_next:
+	@if ! git flow version 2>/dev/null | grep -q 'git-flow-next'; then \
+		echo "Error: git-flow-next required. Install: brew install git-flow-next"; \
+		exit 1; \
+	fi
+
+patch_release: require_gitflow_next
+	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3+1}')
+
+minor_release: require_gitflow_next
+	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2+1".0"}')
+
+major_release: require_gitflow_next
+	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1+1".0.0"}')
+
+hotfix: require_gitflow_next
+	git flow hotfix start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3"."$$4+1}')
+
+release_finish: require_gitflow_next
+	git flow release finish && git push origin develop && git push origin master && git push --tags && git checkout develop
+
+hotfix_finish: require_gitflow_next
+	git flow hotfix finish && git push origin develop && git push origin master && git push --tags && git checkout develop
+
+## --- release: REQUIRED ---
+## Interactive Git Flow orchestrator. See scripts/release.sh.
+release:
+	@scripts/release.sh
