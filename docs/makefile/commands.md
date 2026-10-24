@@ -79,6 +79,7 @@ Usage example:
 
 Available make commands:
 
+custom_release
 deploy
 help
 hotfix
@@ -89,6 +90,7 @@ it_run
 major_release
 minor_release
 patch_release
+release
 release_finish
 setup
 show_vars
@@ -213,107 +215,47 @@ rm ./deploy.tar
 
 ### 🔄 Git Flow Commands
 
+See the [Git Flow release guide](git-flow.md) for setup, release steps, and recovery.
+
 #### `make minor_release`
-**Purpose**: Start a new minor version release (1.0.0 → 1.1.0)
+**Purpose**: Start a minor release branch.
 
-```bash
-make minor_release
-```
-
-**What it does**:
-1. Gets latest tag from Git
-2. Increments minor version number
-3. Starts Git Flow release branch
-4. Provides next step instructions
-
-**Example**:
-```bash
-# If current tag is v1.0.0, creates release/1.1.0
-git flow release start 1.1.0
-```
-
----
+**What it does**: Uses the newest tag matching `v[0-9]*` and increments the minor version.
 
 #### `make patch_release`
-**Purpose**: Start a new patch version release (1.0.0 → 1.0.1)
+**Purpose**: Start a patch release branch.
 
-```bash
-make patch_release
-```
-
-**What it does**:
-1. Gets latest tag from Git
-2. Increments patch version number
-3. Starts Git Flow release branch
-
----
+**What it does**: Uses the newest tag matching `v[0-9]*` and increments the patch version.
 
 #### `make major_release`
-**Purpose**: Start a new major version release (1.0.0 → 2.0.0)
+**Purpose**: Start a major release branch.
 
-```bash
-make major_release
-```
-
-**What it does**:
-1. Gets latest tag from Git
-2. Increments major version number
-3. Starts Git Flow release branch
-
----
+**What it does**: Uses the newest tag matching `v[0-9]*` and increments the major version.
 
 #### `make hotfix`
-**Purpose**: Start a hotfix with fourth version number (1.0.0 → 1.0.0.1)
+**Purpose**: Start a hotfix branch from `master`.
 
-```bash
-make hotfix
-```
+**What it does**: Uses the newest tag matching `v[0-9]*` and increments the fourth version number.
 
-**What it does**:
-1. Gets latest tag from Git
-2. Adds or increments fourth version number
-3. Starts Git Flow hotfix branch
+#### `make custom_release`
+**Purpose**: Start a release at a chosen version.
 
----
+**What it does**: Requires a valid `VER` value, such as `2.1.0`, and starts a release branch at that version.
 
 #### `make release_finish`
-**Purpose**: Complete current release and push to all branches
+**Purpose**: Finish the current release or hotfix.
 
-```bash
-make release_finish
-```
-
-**What it does**:
-1. Finishes current Git Flow release
-2. Pushes to develop branch
-3. Pushes to master branch
-4. Pushes all tags
-5. Switches back to develop
-
-**Full command**:
-```bash
-git flow release finish "CURRENT_RELEASE_VERSION" && \
-git push origin develop && \
-git push origin master && \
-git push --tags && \
-git checkout develop
-```
-
----
+**What it does**: Runs tests when the repository has a `test` target, merges into `master`, tags the release, merges the tag into `develop`, deletes the branch, and pushes `develop`, `master`, and the tag.
 
 #### `make hotfix_finish`
-**Purpose**: Complete current hotfix and push to all branches
+**Purpose**: Finish the current hotfix.
 
-```bash
-make hotfix_finish
-```
+**What it does**: Runs the same finish flow as `make release_finish`.
 
-**What it does**:
-1. Finishes current Git Flow hotfix
-2. Pushes to develop branch
-3. Pushes to master branch
-4. Pushes all tags
-5. Switches back to master
+#### `make release`
+**Purpose**: Run the whole release interactively.
+
+**What it does**: Uses `git-release` to ask for the type, start the release, pause for review, finish it, and offer `it_build_multi_arch_push_GHCR` and `it_deploy` when available.
 
 ---
 
@@ -434,10 +376,7 @@ caprover --version
 
 **"Git Flow not initialized"**
 ```bash
-# Initialize Git Flow
-git flow init
-
-# Accept defaults or customize
+git flow init -d -m master -e develop -t v
 ```
 
 **"Remote URL not found"**

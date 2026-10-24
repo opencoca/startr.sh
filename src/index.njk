@@ -6,7 +6,7 @@ html_content
 #--><pre style="--h: 20em; --of:scroll; --maxw: 100%; --size:0.4rem; --bg:rgba(255, 255, 255, 0.055); --b:0.2em solid rgba(0, 213, 184, 1); --br:0.6em; --p: 1em; box-shadow: 0 0 10px rgba(0, 213, 184, 0.5); --c:rgba(0, 213, 184, 1)">
 #!/bin/bash
 #
-# Version 1.7.0
+# Version 1.8.0
 #
 # Copyright (c) Startr LLC. All rights reserved.
 # This script is licensed under the GNU Affero General Public License v3.0.
@@ -16,10 +16,12 @@ html_content
 # This script builds a Docker image for the 
 # current project and optionally runs it.
 #
-# `curl startr.sh|bash` to run this script
+# `curl -fsSL startr.sh|bash` to run this script
 # or pass arguments such as `build` or `run`
 #
-# `curl startr.sh|bash -s build` to build
+# `curl -fsSL startr.sh|bash -s build` to build
+#
+# Answers are read from the terminal, since `curl | bash` feeds this script on stdin.
 # 
 
 ascii_art="
@@ -132,7 +134,7 @@ ask_for_input() {
     echo -e "${BLUE}2. build_and_run       - (Default) Build the Docker image and run the container.${NC}"
     echo -e "${BLUE}3. run                 - Run the container using the existing image.${NC}"
     echo -e "${BLUE}Enter your choice (build/build_and_run/run) [default: build_and_run]:${NC}"
-    read -r JOB_INPUT
+    read -r JOB_INPUT < /dev/tty
     # Default to "build_and_run" if nothing is entered
     if [ -z "$JOB_INPUT" ]; then
         JOB="build_and_run"
@@ -141,11 +143,11 @@ ask_for_input() {
     fi
     while [[ "$JOB" != "build" && "$JOB" != "build_and_run" && "$JOB" != "run" ]]; do
         echo -e "${RED}Invalid input. Please enter 'build', 'build_and_run', or 'run':${NC}"
-        read -r JOB
+        read -r JOB < /dev/tty || exit 1
     done
 
     echo -e "${BLUE}Do you want to specify a platform? (Enter the platform or leave blank for none):${NC}"
-    read -r PLATFORM
+    read -r PLATFORM < /dev/tty
 }
 
 # Function to provide information on repositories
@@ -153,26 +155,25 @@ explain_repo() {
     echo -e "${YELLOW}A git repository is a virtual storage of your project. It allows you to save versions of your code, which you can access when needed.${NC}"
     echo -e "${YELLOW}For more information, visit: https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control${NC}"
     echo -e "${BLUE}Would you like to clone the example repository 'https://github.com/Startr/WEB-flask'? (y/n):${NC}"
-    read -r CLONE_REPO
+    read -r CLONE_REPO < /dev/tty
     if [ "$CLONE_REPO" == "y" ]; then
         git clone https://github.com/Startr/WEB-flask
-        cd WEB-flask
-        if [ $? -ne 0 ]; then
+        if ! cd WEB-flask; then
             echo -e "${RED}Failed to clone the repository. Please check your internet connection and try again.${NC}"
             exit 1
         fi
-        cd WEB-flask || exit
         echo -e "${GREEN}Repository cloned and switched to WEB-flask directory.${NC}"
     else
         echo -e ""
         echo -e "${BLUE}Would you like to set up a git flow repository in this directory? (y/n):${NC}"
         echo -e ""
         echo -e "${YELLOW}Note: Git flow is a branching model for Git, which helps with managing your repository.${NC}"
-        echo -e "${YELLOW}      You will need to have git flow installed on your system.${NC}" 
-        read -r SETUP_REPO
+        echo -e "${YELLOW}      It needs git-flow-next: curl -fsSL startr.sh/scripts/tools.sh | bash -s -- git-flow-next${NC}" 
+        read -r SETUP_REPO < /dev/tty
         echo -e ""
         if [ "$SETUP_REPO" == "y" ]; then
-            git flow init
+            # master, never main: the Startr Makefile's release flow expects it
+            git flow init -d -m master -e develop -t v || exit 1
         else
             echo -e "OK... You'll need to set up a git repository before running this script."
             echo -e "${RED}Please set up a git repository before running this script.${NC}"
@@ -206,7 +207,7 @@ fi
 create_dockerfile() {
     PROJECT_TYPE=$1
     if [ "$PROJECT_TYPE" == "python-pipenv" ]; then
-        cat > Dockerfile <<EOF
+        cat > Dockerfile << EOF
 # Python Dockerfile
 FROM python:3.8-slim
 
@@ -221,7 +222,7 @@ CMD ["pipenv", "run", "python", "your_script.py"]
 EOF
         DEFAULT_PORT=5000
     elif [ "$PROJECT_TYPE" == "node-bun" ]; then
-        cat > Dockerfile <<EOF
+        cat > Dockerfile << EOF
 # Node.js (Bun) Dockerfile
 FROM oven/bun:latest
 
@@ -234,7 +235,7 @@ CMD ["bun", "start"]
 EOF
         DEFAULT_PORT=8080
     elif [ "$PROJECT_TYPE" == "node" ]; then
-        cat > Dockerfile <<EOF
+        cat > Dockerfile << EOF
 # Node.js Dockerfile
 FROM node:14
 
@@ -277,7 +278,7 @@ if [ ! -f Dockerfile ]; then
 
     echo -e "${YELLOW}The Dockerfile exposes the default port ${DEFAULT_PORT}. For production, you may need to change this port.${NC}"
     echo -e "${BLUE}Please acknowledge that you understand this by typing 'yes':${NC}"
-    read -r ACKNOWLEDGMENT
+    read -r ACKNOWLEDGMENT < /dev/tty
     if [ "$ACKNOWLEDGMENT" != "yes" ]; then
         echo -e "${RED}Acknowledgment not received. Exiting.${NC}"
         exit 1
@@ -294,6 +295,21 @@ else
     echo -e "${YELLOW}No platform specified${NC}"
 fi
 
+
+# A container engine must be running. The offer asks before installing anything.
+if ! docker info > /dev/null 2>&1; then
+    echo -e "${YELLOW}Docker is not running.${NC}"
+    STARTR_URL="${STARTR_URL:-https://startr.sh}"
+    TOOLS_TMP="$(mktemp)"
+    if curl -fsSL "$STARTR_URL/scripts/tools.sh" -o "$TOOLS_TMP" && grep -qF 'tools.sh: offers' "$TOOLS_TMP"; then
+        bash "$TOOLS_TMP" runtime
+    fi
+    rm -f "$TOOLS_TMP"
+    if ! docker info > /dev/null 2>&1; then
+        echo -e "${RED}No running container engine, so nothing was built.${NC}"
+        exit 1
+    fi
+fi
 
 # Set PROJECTPATH to the path of the current directory
 PROJECTPATH="$(git rev-parse --show-toplevel)"

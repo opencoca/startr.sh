@@ -1,5 +1,21 @@
 # TODO - Startr.sh Development Tasks
 
+## 🔥 Now (2026-10-21)
+
+- [ ] **Standard Makefile v2 and the new release flow, served at startr.sh/Makefile** #critical
+  - [x] [WE] `templates/Makefile.base`: release block v2 between markers (plain-git finish, test gate, `custom_release`, `v` tags only, first release from 0.0.0)
+  - [x] [WE] `templates/Makefile.docker`: docker first, podman fallback, `require_runtime`
+  - [x] [WE] Root `Makefile` carries the same block, plus `make test` and `make test_site`
+  - [x] [WE] `src/scripts/tools.sh`: asks before installing Homebrew, git-flow-next, git-release or sage-runtime; no terminal, no install
+  - [x] [WE] Publish `/Makefile` and `/Makefile.docker`; a real 404 page; drop `src/scripts/release.sh` and `src/resources/Makefile`
+  - [x] [WE] CEP 1.1.0 and root installer 1.8.0: prompts read `/dev/tty`, `curl -fsSL`, Makefile and tools offers
+  - [x] [WE] Docs: new `docs/makefile/git-flow.md`; fix README, commands, deployment, DEVELOPMENT_WORKFLOW
+  - [x] [WE] Local gates: the suite, end to end on the built site, a rehearsal of this repo's 0.3.0
+  - [ ] [MANUALLY] Commit, push `develop`, release 0.3.0 with `make minor_release` then `make release_finish`
+  - [ ] [MANUALLY] `make install_hooks` turns on the pre-push test hook
+  - [ ] [WE] `package-lock.json` has drifted from `package.json` (`npm ci` fails: `uc.micro@1.0.6` missing); `make test_site` uses `npm install` until the lockfile is regenerated in Docker
+  - [ ] [WE] The CEP page's script listing is magenta on magenta, unreadable (live too); pick a readable colour
+
 ## Project Philosophy & Vision
 
 ### **The Startr Enlightenment**
@@ -109,7 +125,7 @@ Common Enlightenment Protocol represents our belief that development teams spend
   - [x] Create `docs/makefile/README.md` - Main Makefile documentation
   - [x] Create `docs/makefile/commands.md` - Detailed command reference
   - [x] Create `docs/makefile/variables.md` - Dynamic variables explanation
-  - [ ] Create `docs/makefile/deployment.md` - CapRover deployment docs
+  - [x] Create `docs/makefile/deployment.md` - CapRover deployment docs
   - [ ] Create `docs/makefile/git-flow.md` - Git flow integration docs
   - [ ] Create `docs/makefile/customization.md` - How to customize the Makefile
   - [x] Test all documented commands work as expected
@@ -138,7 +154,7 @@ Common Enlightenment Protocol represents our belief that development teams spend
 
 - [ ] **Enhance Startr.sh Script**: Add resource download capabilities
   - [ ] Modify main startr.sh script to offer resource downloads
-  - [ ] Add `--get-makefile` flag to download standardized Makefile
+  - [x] ~~Add `--get-makefile` flag~~ replaced by `curl -fsSL startr.sh/Makefile -o Makefile` (2026-10-21)
   - [ ] Add `--get-dockerfile` flag to download appropriate Dockerfile
   - [ ] Add `--get-gitignore` flag to download appropriate .gitignore
   - [ ] Add `--setup-project` flag for complete project setup
@@ -207,8 +223,8 @@ Common Enlightenment Protocol represents our belief that development teams spend
   - [ ] Cross-browser testing for web interface
 
 - [ ] **Create Automated Testing**: Continuous validation
-  - [ ] Create tests for Makefile commands
-  - [ ] Create tests for resource downloads
+  - [x] Create tests for Makefile commands (`make test`, 2026-10-21)
+  - [x] Create tests for resource downloads (`make test`, 2026-10-21)
   - [ ] Create tests for documentation completeness
   - [ ] Create tests for website functionality
   - [ ] Set up CI/CD for documentation updates

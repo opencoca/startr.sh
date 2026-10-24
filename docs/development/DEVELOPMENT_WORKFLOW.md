@@ -100,7 +100,7 @@ src/
 ```javascript
 // ✅ Good - single purpose
 function downloadMakefile() {
-  return fetch('/resources/makefile');
+  return fetch('/Makefile');
 }
 
 // ❌ Bad - multiple responsibilities  
@@ -132,7 +132,7 @@ function createDownloadLink(resource, filename) {
 
 // ❌ Bad - repeated code
 function createMakefileLink() {
-  return '<a href="/resources/makefile" download="Makefile">Download Makefile</a>';
+  return '<a href="/Makefile" download="Makefile">Download Makefile</a>';
 }
 function createDockerfileLink() {
   return '<a href="/resources/dockerfile" download="Dockerfile">Download Dockerfile</a>';
@@ -174,7 +174,7 @@ bash <(curl -sL localhost:8080)
 # ✅ Good - clear and specific
 git commit -m "Add resource download endpoint for Makefile
 
-- Create /resources/makefile route
+- Publish /Makefile from templates/Makefile.base
 - Add downloadable Makefile template
 - Update documentation with usage examples
 - Closes #123"
@@ -185,14 +185,16 @@ git commit -m "Add stuff"
 
 ### Git Flow Integration
 ```bash
-# Start feature
-make minor_release  # or patch_release, major_release
+# Start a release branch
+make minor_release  # or patch_release, major_release, hotfix
 
-# Work on feature following Plan-Document-Execute-Verify
+# Commit the release changes (version, CHANGELOG)
 
-# Finish feature  
+# Finish: test, merge, tag, push
 make release_finish
 ```
+
+Full guide: [docs/makefile/git-flow.md](../makefile/git-flow.md).
 
 ## Documentation Standards
 

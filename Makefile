@@ -41,13 +41,13 @@ CONTAINER := $(PROJECT)-$(BRANCH)
 #SERVER__CONTAINER_FILTER ?= 
 
 it_run:
-	@bash -c 'bash <(curl -sL startr.sh) run'
+	@bash -c 'bash <(curl -fsSL $(STARTR_URL)) run'
 
 it_build:
-	@bash -c 'bash <(curl -sL startr.sh) build'
+	@bash -c 'bash <(curl -fsSL $(STARTR_URL)) build'
 
 it_build_n_run:
-	@bash -c 'bash <(curl -sL startr.sh) build && bash <(curl -sL startr.sh) run'
+	@bash -c 'bash <(curl -fsSL $(STARTR_URL)) build && bash <(curl -fsSL $(STARTR_URL)) run'
 
 show_vars:
 	@echo "=== Dynamic Variables ==="
@@ -69,23 +69,11 @@ update_submodules:
 # Check if .gitmodules exists (returns 1 if present, empty otherwise)
 HAS_SUBMODULE := $(shell [ -f .gitmodules ] && echo 1)
 
-# for deployment to work we need to be logged in to caprover
-# and have the caprover CLI installed
-# check if caprover is installed
-HAS_CAPROVER := $(shell which caprover 2>/dev/null && echo 1)
-# check if we are logged in to caprover
-HAS_CAPROVER_LOGIN := $(shell caprover ls | grep -q "Logged in" && echo 1)
-
+# Deploying needs the CapRover CLI and a login. Both are checked only
+# when you deploy, not every time make reads this file.
 deploy:
-	@if [ "$(HAS_CAPROVER)" = "" ]; then \
-		echo "CapRover CLI is not installed. Please install it first."; \
-		echo "You can install it using npm: npm install -g caprover"; \
-		exit 1; \
-	elif [ "$(HAS_CAPROVER_LOGIN)" = "" ]; then \
-		echo "You are not logged in to CapRover."; \
-		echo "Please log in using the command: caprover login"; \
-		exit 1; \
-	fi
+	@command -v caprover >/dev/null 2>&1 || { echo "CapRover CLI is not installed. Install it with: npm install -g caprover"; exit 1; }
+	@caprover ls 2>/dev/null | grep -q "Logged in" || { echo "You are not logged in to CapRover. Run: caprover login"; exit 1; }
 	@if [ "$(HAS_SUBMODULE)" = "1" ]; then \
 		echo "Submodules detected."; \
 		echo "We will create a tar of the project and deploy it"; \
@@ -99,28 +87,6 @@ deploy:
 		echo "No submodules detected. Deploying normally..."; \
 		npx caprover deploy; \
 	fi
-
-minor_release:
-	# Start a minor release with incremented minor version
-	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2+1".0"}') && echo "or use 'make release_finish' to finish the release"
-
-patch_release:
-	# Start a patch release with incremented patch version
-	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3+1}') && echo "or use 'make release_finish' to finish the release"
-
-major_release:
-	# Start a major release with incremented major version
-	git flow release start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1+1".0.0"}') && echo "or use 'make release_finish' to finish the release"
-
-hotfix:
-	# Start a hotfix with incremented n.n.n.n version (incrementing the fourth number)
-	git flow hotfix start $$(git tag --sort=-v:refname | sed 's/^v//' | head -n 1 | awk -F'.' '{print $$1"."$$2"."$$3"."$$4+1}') && echo "or use 'make hotfix_finish' to finish the hotfix"
-
-release_finish:
-	git flow release finish "$$(git branch --show-current | sed 's/release\///')" && git push origin develop && git push origin master && git push --tags && git checkout develop
-
-hotfix_finish:
-	git flow hotfix finish "$$(git branch --show-current | sed 's/hotfix\///')" && git push origin develop && git push origin master && git push --tags && git checkout master
 
 things_clean:
 	git clean --exclude=!.env -Xdf
@@ -192,11 +158,12 @@ docs_fix_links:
 	@cd src/docs && ln -sf ../../docs/makefile/commands.md makefile-commands.md
 	@cd src/docs && ln -sf ../../docs/makefile/variables.md makefile-variables.md
 	@cd src/docs && ln -sf ../../docs/makefile/deployment.md makefile-deployment.md
+	@cd src/docs && ln -sf ../../docs/makefile/git-flow.md makefile-git-flow.md
 	@echo "✅ Documentation symlinks created successfully!"
 
 docs_status:
 	@echo "=== Documentation Symlinks Status ==="
-	@for doc in makefile-guide makefile-commands makefile-variables makefile-deployment; do \
+	@for doc in makefile-guide makefile-commands makefile-variables makefile-deployment makefile-git-flow; do \
 		if [ -L "src/docs/$$doc.md" ]; then \
 			echo "$$doc.md:"; \
 			ls -la "src/docs/$$doc.md"; \
@@ -241,3 +208,116 @@ uninstall_hooks:
 		fi; \
 	done
 	@echo "🎉 All project hooks uninstalled!"
+
+# ---------------------------------------------------------------------------
+# Tests: `make test` is fast and local only; `make test_site` builds the
+# site in a node container and checks what it would publish.
+# ---------------------------------------------------------------------------
+test:
+	@bash tests/run.sh
+
+test_site:
+	@bash tests/site.sh
+
+# ---------------------------------------------------------------------------
+# Release flow: the same block startr.sh hands out in templates/Makefile.base
+# ---------------------------------------------------------------------------
+## >>> startr release block v2 (startr.sh/Makefile, 2026-10-21) >>>
+## git-flow-next starts a release or hotfix branch; plain git finishes it.
+## Each finish step skips itself once done, so re-running a finish is safe.
+## The finish runs `make test` first, when the repo has a test target.
+## To update a repo, replace everything between the two marker lines.
+## Guide: https://startr.sh/docs/makefile-git-flow/
+STARTR_URL ?= https://startr.sh
+STARTR_TOOLS = curl -fsSL $(STARTR_URL)/scripts/tools.sh | bash -s --
+LAST_VERSION := $(or $(shell git tag -l 'v[0-9]*' --sort=-v:refname 2>/dev/null | head -n 1 | sed 's/^v//'),0.0.0)
+
+.PHONY: require_gitflow_next patch_release minor_release major_release \
+        hotfix custom_release release_finish hotfix_finish release
+
+require_gitflow_next:
+	@git flow version 2>/dev/null | grep -q git-flow-next || { $(STARTR_TOOLS) git-flow-next; git flow version 2>/dev/null | grep -q git-flow-next; }
+	@git config --get-regexp '^gitflow\.(initialized|branch\.develop)' >/dev/null || { echo "git-flow is not set up here. Run: git flow init -d -m master -e develop -t v"; exit 1; }
+
+define release_next_step
+	@echo "Next: commit the release changes (version, CHANGELOG), then run: make release_finish"
+endef
+
+patch_release: require_gitflow_next
+	git flow release start $$(echo $(LAST_VERSION) | awk -F. '{print $$1"."$$2"."$$3+1}')
+	$(release_next_step)
+
+minor_release: require_gitflow_next
+	git flow release start $$(echo $(LAST_VERSION) | awk -F. '{print $$1"."$$2+1".0"}')
+	$(release_next_step)
+
+major_release: require_gitflow_next
+	git flow release start $$(echo $(LAST_VERSION) | awk -F. '{print $$1+1".0.0"}')
+	$(release_next_step)
+
+## A hotfix bumps a fourth number: 1.2.3 -> 1.2.3.1 -> 1.2.3.2
+hotfix: require_gitflow_next
+	git flow hotfix start $$(echo $(LAST_VERSION) | awk -F. '{if (NF < 4) print $$1"."$$2"."$$3".1"; else print $$1"."$$2"."$$3"."$$4+1}')
+	$(release_next_step)
+
+## make custom_release VER=2.1.0
+custom_release: require_gitflow_next
+	@echo "$(VER)" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$$' || { echo "Usage: make custom_release VER=X.Y.Z"; exit 1; }
+	git flow release start $(VER)
+	$(release_next_step)
+
+## The finish, in order: tests on the branch, merge it into master, tag
+## master, merge the tag into develop (so `git describe` there sees it),
+## delete the branch, then push develop, master and the tag.
+## The branch name gives the version. With the branch gone, a re-run
+## pushes the newest tag if origin lacks it. The topic branch is never pushed.
+## $(MAKE) sits inside this define, so `make -n release_finish` runs nothing.
+define finish_flow
+	@set -e; \
+	brs="$$(git for-each-ref --format='%(refname:short)' refs/heads/release refs/heads/hotfix)"; \
+	if [ "$$(echo "$$brs" | grep -c .)" -gt 1 ]; then echo "More than one branch to finish:"; echo "$$brs"; exit 1; fi; \
+	br="$$brs"; \
+	if [ -n "$$br" ]; then ver="$${br#*/}"; \
+	else \
+		ver="$(LAST_VERSION)"; \
+		git rev-parse -q --verify "refs/tags/v$$ver" >/dev/null || { echo "Nothing to finish: no release/* or hotfix/* branch."; exit 0; }; \
+		if git ls-remote --exit-code --tags origin "refs/tags/v$$ver" >/dev/null 2>&1; then echo "Nothing to finish: v$$ver is already on origin."; exit 0; fi; \
+		echo "No branch to finish, but v$$ver is not on origin yet: pushing it."; \
+	fi; \
+	tag="v$$ver"; \
+	master="$$(git config --get gitflow.branch.master 2>/dev/null || echo master)"; \
+	develop="$$(git config --get gitflow.branch.develop 2>/dev/null || echo develop)"; \
+	if [ -n "$$(git status --porcelain --untracked-files=no)" ]; then \
+		echo "Uncommitted changes: commit or stash them first."; git status --short; exit 1; \
+	fi; \
+	echo "=== Finishing $$ver ==="; \
+	if [ -n "$$br" ]; then \
+		if $(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null | grep -q '^test:'; then \
+			git checkout -q "$$br"; \
+			echo "--- make test on $$br ---"; \
+			$(MAKE) test || { echo "Tests failed: nothing merged, tagged or pushed."; exit 1; }; \
+		else echo "No test target: this release finishes untested."; fi; \
+		git checkout -q "$$master"; \
+		if git merge-base --is-ancestor "$$br" HEAD; then echo "  $$master already has $$br"; \
+		else git merge --no-ff --no-verify -m "Merge branch '$$br'" "$$br"; fi; \
+	fi; \
+	if git rev-parse -q --verify "refs/tags/$$tag" >/dev/null; then echo "  tag $$tag exists"; \
+	else git tag -a "$$tag" -m "Release $$tag" "$$master"; fi; \
+	git checkout -q "$$develop"; \
+	if git merge-base --is-ancestor "$$tag" HEAD; then echo "  $$develop already has $$tag"; \
+	else git merge --no-ff --no-verify -m "Merge tag '$$tag' into $$develop" "$$tag"; fi; \
+	if [ -n "$$br" ]; then git branch -d "$$br"; fi; \
+	git push origin "$$develop" "$$master" "refs/tags/$$tag"; \
+	echo "=== $$ver done: pushed $$develop, $$master and $$tag ==="
+endef
+
+release_finish:
+	$(finish_flow)
+
+hotfix_finish: release_finish
+
+## Interactive release: git-release (sage-is/apps tap) runs start, review, finish
+release:
+	@command -v git-release >/dev/null || { $(STARTR_TOOLS) git-release; command -v git-release >/dev/null; }
+	@git-release
+## <<< startr release block v2 <<<

@@ -288,7 +288,7 @@ COPY --chown=node:node . .  # Set proper ownership
 ```bash
 # Complete release and deploy
 make release_finish
-git checkout main
+git checkout master
 make deploy
 
 # Hotfix deployment

@@ -1,0 +1,159 @@
+## =============================================================================
+## Makefile.docker — Docker/Container Extension for Startr Projects (v2, 2026-10-21)
+## =============================================================================
+## Get it: curl -fsSL https://startr.sh/Makefile.docker
+## Add this block to your Makefile AFTER the Makefile.base variable block.
+## It overrides it_run and it_build with direct container commands,
+## adds docker/podman detection, GHCR image naming, and volume flexibility.
+##
+## Runtime: on a Mac we use Colima, set up by sage-runtime (sage-is/apps tap).
+## Docker Desktop and OrbStack still work. require_runtime offers to set one up.
+##
+## Prerequisite: Makefile.base standard variable block must be present first.
+## Reference implementation: WEB-MCPO-Repo_scanner/Makefile
+## =============================================================================
+
+## --- Container-specific variables (add after Makefile.base variables) ---
+
+## Container runtime: docker when installed, else podman, else docker.
+CONTAINER_RUNTIME ?= $(if $(shell command -v docker 2>/dev/null),docker,$(if $(shell command -v podman 2>/dev/null),podman,docker))
+STARTR_URL ?= https://startr.sh
+
+## Image naming derived from standard variables.
+## NOTE: IMAGE_NAME must be lowercased — Docker rejects uppercase registry names.
+IMAGE_NAME      ?= $(shell echo $(OWNER)/$(PROJECT_NAME) | tr '[:upper:]' '[:lower:]')
+GHCR_IMAGE_NAME ?= ghcr.io/$(shell echo $(OWNER)/$(PROJECT_NAME) | tr '[:upper:]' '[:lower:]')
+
+## IMAGE_TAG uses TAG from Makefile.base; falls back to 'latest' when no tags exist.
+IMAGE_TAG       := $(if $(TAG),$(TAG),latest)
+
+## CONTAINER from Makefile.base (PROJECT-BRANCH) is the running container name.
+## Do NOT redefine CONTAINER; use it directly in docker/podman commands.
+
+## Port mapping and secrets — override in .env or on the CLI.
+PORT_MAPPING    ?= 8080:8080
+SECRET_KEY      ?= $(shell python3 -c "import secrets; print(secrets.token_hex(32))" 2>/dev/null || echo "changeme")
+
+## EXTRA_VOLUMES: space-separated -v flags for additional mounts.
+## Set in .env:  EXTRA_VOLUMES=-v /path/to/repos:/mnt/repos
+## Or on CLI:    make it_run EXTRA_VOLUMES="-v /path/to/repos:/mnt/repos"
+EXTRA_VOLUMES   ?=
+
+## PROJECTS_DIR: shorthand for make it_run_local — mounts a local projects folder.
+PROJECTS_DIR    ?= $(HOME)/Documents/Projects/GitHub
+
+DOCKER_ARGS     ?=
+
+## --- Add these to your .PHONY declaration ---
+## .PHONY: require_runtime it_build it_build_no_cache it_build_n_run \
+##         it_run it_run_ghcr it_run_local \
+##         it_stop it_logs it_clean it_gone
+
+## --- require_runtime: a running engine, or an offer to set one up ---
+## The offer asks before installing anything (startr.sh/scripts/tools.sh).
+require_runtime:
+	@$(CONTAINER_RUNTIME) info >/dev/null 2>&1 || { \
+		if [ "$(CONTAINER_RUNTIME)" = docker ]; then curl -fsSL $(STARTR_URL)/scripts/tools.sh | bash -s -- runtime; \
+		else echo "$(CONTAINER_RUNTIME) is not running. For podman: podman machine start"; fi; \
+		$(CONTAINER_RUNTIME) info >/dev/null 2>&1; }
+
+## --- it_build: overrides Makefile.base ---
+it_build: require_runtime
+	@echo "Building $(IMAGE_NAME):$(IMAGE_TAG) with BuildKit..."
+	@export DOCKER_BUILDKIT=1 && \
+	$(CONTAINER_RUNTIME) build --load \
+		-t $(IMAGE_NAME):$(IMAGE_TAG) \
+		-t $(IMAGE_NAME):latest \
+		-t $(IMAGE_NAME):$(IMAGE_TAG)-$(BRANCH) \
+		-t $(IMAGE_NAME):$(BRANCH) \
+		.
+	@afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true
+
+it_build_no_cache: require_runtime
+	@export DOCKER_BUILDKIT=1 && \
+	$(CONTAINER_RUNTIME) build --no-cache --load \
+		-t $(IMAGE_NAME):$(IMAGE_TAG) \
+		-t $(IMAGE_NAME):latest \
+		-t $(IMAGE_NAME):$(IMAGE_TAG)-$(BRANCH) \
+		-t $(IMAGE_NAME):$(BRANCH) \
+		.
+
+it_build_n_run: it_build
+	@$(MAKE) it_run
+
+## --- it_run: overrides Makefile.base ---
+## Customise the -v and -e flags for your project's specific needs.
+## EXTRA_VOLUMES is appended after project-specific volumes, before DOCKER_ARGS.
+it_run: require_runtime
+	@$(CONTAINER_RUNTIME) stop $(CONTAINER) >/dev/null 2>&1 || true
+	@$(CONTAINER_RUNTIME) rm   $(CONTAINER) >/dev/null 2>&1 || true
+	$(CONTAINER_RUNTIME) run -d \
+		-p $(PORT_MAPPING) \
+		--name $(CONTAINER) \
+		--restart unless-stopped \
+		$(EXTRA_VOLUMES) \
+		$(DOCKER_ARGS) \
+		$(IMAGE_NAME):$(IMAGE_TAG)
+	@echo "Container '$(CONTAINER)' started on port $(PORT_MAPPING)."
+	@echo "Tip: set EXTRA_VOLUMES in .env to mount additional local paths"
+
+## --- it_run_ghcr: run from GHCR image ---
+it_run_ghcr: require_runtime
+	@$(CONTAINER_RUNTIME) stop $(CONTAINER) >/dev/null 2>&1 || true
+	@$(CONTAINER_RUNTIME) rm   $(CONTAINER) >/dev/null 2>&1 || true
+	$(CONTAINER_RUNTIME) run -d \
+		-p $(PORT_MAPPING) \
+		--name $(CONTAINER) \
+		--restart unless-stopped \
+		$(EXTRA_VOLUMES) \
+		$(GHCR_IMAGE_NAME):$(IMAGE_TAG)
+
+## --- it_run_local: DRY wrapper — passes PROJECTS_DIR via EXTRA_VOLUMES ---
+## Override PROJECTS_DIR in .env or: make it_run_local PROJECTS_DIR=~/code
+it_run_local:
+	@$(MAKE) it_run EXTRA_VOLUMES="-v $(PROJECTS_DIR):/mnt/projects $(EXTRA_VOLUMES)"
+	@echo "Projects mounted at /mnt/projects (from $(PROJECTS_DIR))"
+
+## --- Container lifecycle ---
+it_stop: require_runtime
+	$(CONTAINER_RUNTIME) rm -f $(CONTAINER)
+
+it_logs: require_runtime
+	$(CONTAINER_RUNTIME) logs -f $(CONTAINER)
+
+it_clean: require_runtime
+	$(CONTAINER_RUNTIME) system prune -f
+	$(CONTAINER_RUNTIME) builder prune --force
+
+it_gone: require_runtime
+	$(CONTAINER_RUNTIME) stop $(CONTAINER) || true
+	$(CONTAINER_RUNTIME) rm -f $(CONTAINER) || true
+
+## --- show_vars extension ---
+## Append these lines to your show_vars target to display docker variables:
+##
+## show_vars:
+##     ... (base variables from Makefile.base) ...
+##     @echo "=== Docker Extension Variables (Makefile.docker) ==="
+##     @echo "CONTAINER_RUNTIME=$(CONTAINER_RUNTIME)"
+##     @echo "IMAGE_NAME=$(IMAGE_NAME)"
+##     @echo "GHCR_IMAGE_NAME=$(GHCR_IMAGE_NAME)"
+##     @echo "IMAGE_TAG=$(IMAGE_TAG)"
+##     @echo "PORT_MAPPING=$(PORT_MAPPING)"
+##     @echo "PROJECTS_DIR=$(PROJECTS_DIR)"
+##     @echo "EXTRA_VOLUMES=$(EXTRA_VOLUMES)"
+##     @echo ""
+
+## --- setup extension ---
+## Override setup to write docker-specific .env defaults:
+##
+## setup:
+##     @if [ ! -f .env ]; then \
+##         printf 'PORT_MAPPING=8080:8080\n' > .env; \
+##         printf 'SECRET_KEY=changeme\n' >> .env; \
+##         printf 'PROJECTS_DIR=$(HOME)/Documents/Projects/GitHub\n' >> .env; \
+##         printf '# EXTRA_VOLUMES=-v /path/to/repos:/mnt/repos\n' >> .env; \
+##         echo ".env created."; \
+##     else \
+##         echo ".env already exists — skipping."; \
+##     fi
