@@ -46,31 +46,36 @@ make deploy         # Automatically handles submodules if present
 ```
 
 ### 🔄 Git Flow Support
-Complete Git Flow workflow automation:
+git-flow-next starts a release or hotfix branch; plain git finishes it. The finish runs `make test` first when the repo has a test target, and re-running it is safe. Full guide: [git-flow.md](git-flow.md).
 
 ```bash
 make minor_release  # Start minor version release
 make patch_release  # Start patch version release
 make major_release  # Start major version release
-make hotfix         # Start hotfix
-make release_finish # Finish current release
-make hotfix_finish  # Finish current hotfix
+make hotfix         # Start hotfix (fourth number)
+make custom_release VER=2.1.0  # Start a chosen version
+make release_finish # Finish the release or hotfix and push
+make release        # The whole release, run by git-release
 ```
 
 ## Installation
 
 ### Option 1: Download Directly
 ```bash
-curl -sL startr.sh/resources/makefile > Makefile
+curl -fsSL https://startr.sh/Makefile -o Makefile
 ```
 
-### Option 2: Use Startr.sh
+Container projects also add the block from `https://startr.sh/Makefile.docker` after the standard variables.
+
+### Option 2: Use CEP
 ```bash
-bash <(curl -sL startr.sh) --get-makefile
+bash <(curl -fsSL startr.sh/cep)
 ```
 
-### Option 3: Copy from Repository
-Copy the [standardized Makefile](../../Makefile) to your project root.
+CEP offers the Makefile when the project has none. It never touches an existing Makefile.
+
+### Option 3: Update an Existing Makefile
+Replace everything between the two `startr release block v2` marker lines with the block from `https://startr.sh/Makefile`. See [git-flow.md](git-flow.md).
 
 ## Configuration
 
@@ -88,9 +93,11 @@ NODE_ENV=production
 
 ### Prerequisites
 - **Git repository** with remote origin
-- **Docker** (for container builds)
+- **A container runtime** (for container builds): on a Mac, Colima set up by `sage-runtime`; Docker Desktop and OrbStack still work
 - **CapRover CLI** (for deployment)
-- **Git Flow** (for release management)
+- **git-flow-next** and **git-release** (for releases)
+
+When a tool is missing, the Makefile offers to install it through `startr.sh/scripts/tools.sh`. It asks before every install.
 
 ## Command Reference
 
@@ -115,8 +122,10 @@ NODE_ENV=production
 - `make patch_release` - Start new patch version release (1.0.0 → 1.0.1)  
 - `make major_release` - Start new major version release (1.0.0 → 2.0.0)
 - `make hotfix` - Start new hotfix (1.0.0 → 1.0.0.1)
-- `make release_finish` - Complete current release and push
-- `make hotfix_finish` - Complete current hotfix and push
+- `make custom_release VER=2.1.0` - Start a release at a chosen version
+- `make release_finish` - Test, merge, tag and push the current release or hotfix
+- `make hotfix_finish` - The same as `make release_finish`
+- `make release` - Run the whole release with git-release
 
 ## Advanced Usage
 
