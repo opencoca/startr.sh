@@ -26,7 +26,7 @@ expect_ok() { if [ "$rc" = 0 ]; then ok "$1"; else bad "$1 (exit $rc)" "$out"; f
 expect_fail() { if [ "$rc" != 0 ]; then ok "$1"; else bad "$1 (expected a failure)" "$out"; fi; }
 expect_has() { if printf '%s' "$out" | grep -qF -- "$2"; then ok "$1"; else bad "$1 (no '$2')" "$out"; fi; }
 expect_lacks() { if printf '%s' "$out" | grep -qF -- "$2"; then bad "$1 (found '$2')" "$out"; else ok "$1"; fi; }
-assert() { local name="$1"; shift; if "$@"; then ok "$name"; else bad "$name"; fi; }
+assert() { local name="$1"; shift; if "$@" >/dev/null 2>&1; then ok "$name"; else bad "$name"; fi; }
 capture() { out="$("$@" 2>&1)"; rc=$?; }
 
 # --- Isolation: our own git config, a fixed PATH, nothing interactive ---
