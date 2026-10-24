@@ -29,8 +29,11 @@ module.exports = function(eleventyConfig) {
 
   // passthrough any sh files
   eleventyConfig.addPassthroughCopy("**/*.sh");
-  // _passthrough _redirects
-  eleventyConfig.addPassthroughCopy("_redirects");
+  // The standard Makefiles, served raw at /Makefile and /Makefile.docker
+  eleventyConfig.addPassthroughCopy({
+    "../templates/Makefile.base": "/Makefile",
+    "../templates/Makefile.docker": "/Makefile.docker",
+  });
 
   // Copy markdown files from the cep directory
   eleventyConfig.addPassthroughCopy("cep/**/*.md");
