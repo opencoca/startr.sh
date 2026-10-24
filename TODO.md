@@ -11,8 +11,8 @@
   - [x] [WE] CEP 1.1.0 and root installer 1.8.0: prompts read `/dev/tty`, `curl -fsSL`, Makefile and tools offers
   - [x] [WE] Docs: new `docs/makefile/git-flow.md`; fix README, commands, deployment, DEVELOPMENT_WORKFLOW
   - [x] [WE] Local gates: the suite, end to end on the built site, a rehearsal of this repo's 0.3.0
-  - [ ] [MANUALLY] Commit, push `develop`, release 0.3.0 with `make minor_release` then `make release_finish`
-  - [ ] [MANUALLY] `make install_hooks` turns on the pre-push test hook
+  - [x] [MANUALLY] Commit, push `develop`, release 0.3.0 with `make minor_release` then `make release_finish` (2026-10-24, on Alexander's go; live about 40 s after the push)
+  - [x] [MANUALLY] `make install_hooks` turns on the pre-push test hook (2026-10-24)
   - [ ] [WE] `package-lock.json` has drifted from `package.json` (`npm ci` fails: `uc.micro@1.0.6` missing); `make test_site` uses `npm install` until the lockfile is regenerated in Docker
   - [ ] [WE] The CEP page's script listing is magenta on magenta, unreadable (live too); pick a readable colour
 
