@@ -58,6 +58,17 @@ make release_finish # Finish the release or hotfix and push
 make release        # The whole release, run by git-release
 ```
 
+### 🌿 Worktrees
+One checkout per repo; a worktree is for one parallel task and goes the day its branch lands. `wt_check` fails while a landed worktree or branch lingers. Full guide: [worktrees.md](worktrees.md).
+
+```bash
+make wt NAME=quick-note       # feature/quick-note in ../<repo>-wt/quick-note
+make wt_list                  # Worktrees and spare branches, and which have landed
+make wt_done NAME=quick-note  # Remove a clean, landed worktree and its branch
+make wt_tidy                  # wt_done for everything that has landed
+make wt_check                 # Fail on landed or stale worktrees and branches
+```
+
 ## Installation
 
 ### Option 1: Download Directly
@@ -75,7 +86,14 @@ bash <(curl -fsSL startr.sh/cep)
 CEP offers the Makefile when the project has none. It never touches an existing Makefile.
 
 ### Option 3: Update an Existing Makefile
-Replace everything between the two `startr release block v2` marker lines with the block from `https://startr.sh/Makefile`. See [git-flow.md](git-flow.md).
+Take or update a marked block with the script; it replaces what lies between the markers, or appends the block:
+
+```bash
+curl -fsSL https://startr.sh/scripts/take_block.sh | sh -s release Makefile
+curl -fsSL https://startr.sh/scripts/take_block.sh | sh -s worktree Makefile
+```
+
+See [git-flow.md](git-flow.md) and [worktrees.md](worktrees.md).
 
 ## Configuration
 

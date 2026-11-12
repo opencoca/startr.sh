@@ -328,8 +328,80 @@ expect_ok "CEP piped into bash at a terminal runs"
 assert "it asked at the terminal and fetched the Makefile" grep -qF '## >>> startr release block v2' Makefile
 expect_has "tools.sh asked before installing" "Run it now? [y/N]"
 
+echo "== The worktree block"
+wblock() { sed -n '/>>> startr worktree block v1/,/<<< startr worktree block v1/p' "$1"; }
+assert "Makefile and templates/Makefile.base carry the same worktree block" \
+	diff <(wblock "$ROOT_DIR/Makefile") <(wblock "$ROOT_DIR/templates/Makefile.base")
+TB="$ROOT_DIR/src/scripts/take_block.sh"
+K="$WORK/take"
+mkdir -p "$K"
+printf 'help:\n\t@echo hi\n' > "$K/Makefile"
+ln "$K/Makefile" "$K/Makefile.link"
+capture sh "$TB" worktree "$K/Makefile" "$ROOT_DIR/templates/Makefile.base"
+expect_ok "take_block appends the worktree block"
+assert "the Makefile now carries it" test -n "$(wblock "$K/Makefile")"
+assert "and the hardlink still holds" test "$(stat -f %l "$K/Makefile" 2>/dev/null || stat -c %h "$K/Makefile")" = 2
+capture sh "$TB" worktree "$K/Makefile" "$ROOT_DIR/templates/Makefile.base"
+expect_has "a second take changes nothing" "already current"
+printf 'wt:\n\t@echo mine\n' > "$K/Clash.mk"
+capture sh "$TB" worktree "$K/Clash.mk" "$ROOT_DIR/templates/Makefile.base"
+expect_fail "take_block refuses a Makefile that defines wt itself"
+
+V="$WORK/wtrepo"
+command git init -q "$V"
+cd "$V" || exit 1
+cp "$ROOT_DIR/templates/Makefile.base" Makefile
+git add Makefile && git commit -q -m init && git checkout -q -b develop
+refs_before="$(git for-each-ref)"
+capture make -n wt NAME=a
+assert "make -n wt creates nothing" test "$refs_before" = "$(git for-each-ref)" -a ! -e "$V-wt"
+echo "NAME=from-env" > .env
+capture make -s wt
+expect_fail "wt wants NAME on the command line, not from .env"
+rm .env
+capture make -s wt NAME=a
+expect_ok "wt NAME=a creates a worktree"
+assert "on feature/a, in ../wtrepo-wt/a" test "$(git -C "$V-wt/a" branch --show-current)" = feature/a
+capture make -s wt_check
+expect_ok "a fresh worktree passes wt_check"
+(cd "$V-wt/a" && echo x > x && git add x && git commit -q -m x)
+capture make -s wt_done NAME=a
+expect_fail "wt_done refuses work not yet in develop"
+echo y > "$V-wt/a/y"
+capture make -s wt_done NAME=a
+expect_fail "wt_done refuses uncommitted changes"
+rm "$V-wt/a/y"
+git merge -q --no-ff -m "Merge feature/a" feature/a
+capture make -s wt_check
+expect_fail "a landed worktree fails wt_check"
+capture make -s wt NAME=b
+expect_fail "wt refuses a new worktree while a landed one lingers"
+capture make -s wt_done NAME=a
+expect_ok "wt_done removes a landed worktree"
+assert "the folder and the branch are gone" test ! -e "$V-wt/a" -a -z "$(git branch --list feature/a)"
+capture make -s wt NAME=fix/sq
+(cd "$V-wt/fix-sq" && echo 1 > s1 && git add s1 && git commit -q -m s1 && echo 2 > s2 && git add s2 && git commit -q -m s2)
+git merge -q --squash fix/sq >/dev/null && git commit -q -m "Squash fix/sq"
+capture make -s wt_check
+expect_has "a squash-merged worktree counts as landed" "landed worktree"
+git branch feature/spare
+git checkout -q -b feature/open && echo o > o && git add o && git commit -q -m o && git checkout -q develop
+capture make -s wt_tidy
+expect_ok "wt_tidy runs"
+assert "it removed the squashed worktree and the landed spare branch" \
+	test ! -e "$V-wt/fix-sq" -a -z "$(git branch --list fix/sq feature/spare)"
+assert "it kept the unmerged branch" test -n "$(git branch --list feature/open)"
+capture make -s wt_check
+expect_ok "wt_check passes once tidy"
+for n in c1 c2 c3; do make -s wt NAME=$n >/dev/null 2>&1; done
+capture make -s wt NAME=c4
+expect_has "wt refuses a fourth open worktree" "WT_MAX is 3"
+capture make -s wt_check WT_DAYS=-1
+expect_has "wt_check fails a worktree past WT_DAYS" "days old"
+cd "$ROOT_DIR" || exit 1
+
 echo "== Lint"
-for f in "$ROOT_DIR/src/scripts/tools.sh" "$ROOT_DIR/tests/run.sh" "$ROOT_DIR/tests/site.sh"; do
+for f in "$ROOT_DIR/src/scripts/tools.sh" "$ROOT_DIR/src/scripts/take_block.sh" "$ROOT_DIR/tests/run.sh" "$ROOT_DIR/tests/site.sh"; do
 	assert "shellcheck $(basename "$f")" shellcheck -x "$f"
 done
 for f in "$ROOT_DIR"/src/seatbelts/*.sh; do

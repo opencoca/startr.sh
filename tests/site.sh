@@ -40,6 +40,8 @@ check "/scripts/release.sh is gone" test ! -e "$D/scripts/release.sh"
 check "/resources/Makefile is gone" test ! -e "$D/resources/Makefile"
 check "/_redirects is gone" test ! -e "$D/_redirects"
 check "the git-flow guide is built" test -s "$D/docs/makefile-git-flow/index.html"
+check "the worktree guide is built" test -s "$D/docs/makefile-worktrees/index.html"
+check "/scripts/take_block.sh is src/scripts/take_block.sh" cmp -s "$D/scripts/take_block.sh" src/scripts/take_block.sh
 check "the CEP page is still a bash script" bash -n "$D/cep/index.html"
 check "the home page is still a bash script" bash -n "$D/index.html"
 check "the CEP page still renders its HTML" grep -q '<html' "$D/cep/index.html"

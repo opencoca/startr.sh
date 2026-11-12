@@ -2,6 +2,17 @@
 
 ## 🔥 Now (2026-10-21)
 
+- [ ] **Worktree block v1 in the standard Makefile, then in every one of our Makefiles** (2026-11-12, after 8 Trellis worktrees and 17 branches outlived their work)
+  - [x] [WE] `templates/Makefile.base` and the root `Makefile`: the marked block with `wt`, `wt_list`, `wt_done`, `wt_tidy`, `wt_check`
+  - [x] [WE] `src/scripts/take_block.sh` (published at /scripts/take_block.sh): takes or updates a marked block in any Makefile
+  - [x] [WE] `tests/run.sh`: the block matches, and each target is exercised in a scratch repo
+  - [x] [WE] `docs/makefile/worktrees.md`
+  - [x] [WE] Take the block into our Makefiles (Sage-is, Startr, opencoca origins); Trellis also runs `wt_check` in `make test` (51 Makefiles, 2026-11-12; `make test` 113 passed, `make test_site` 13 passed)
+  - [ ] [MANUALLY] `make wt_tidy` in Trellis (16 landed branches; it keeps `feature/mail-any-stack`, 4 commits unmerged), APP-Talking, AI-Education-Downes, STARTR-Snap, WEB-DB-sage-pb, WEB-ffpf.org
+  - [ ] [WE] Pre-existing, not the block: AI-Startr-Team `Makefile:4` uses spaces for a recipe; WEB-Desktop includes `.env` without `-`
+  - [ ] [WE] The startr-init skill (agent-tools) names the worktree block
+  - [ ] [MANUALLY] Commit and push each repo
+
 - [ ] **Standard Makefile v2 and the new release flow, served at startr.sh/Makefile** #critical
   - [x] [WE] `templates/Makefile.base`: release block v2 between markers (plain-git finish, test gate, `custom_release`, `v` tags only, first release from 0.0.0)
   - [x] [WE] `templates/Makefile.docker`: docker first, podman fallback, `require_runtime`
